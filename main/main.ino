@@ -40,6 +40,15 @@ void IRAM_ATTR onTimer(){
   portEXIT_CRITICAL_ISR(&timerMux);
 }
 
+//Right Motor Pins
+const char motor1Pin1 = 18;
+const char motor1Pin2 = 19;
+const char enA = 5;
+//Left Motor Pins
+const char motor2Pin1 = 16;
+const char motor2Pin2 = 17;
+const char enB = 4;
+
 void setup()
 {
   Serial.begin(115200);
@@ -49,6 +58,18 @@ void setup()
 //  timerAttachInterrupt(timer, &onTimer, true);
 //  timerAlarmWrite(timer, 1000000, true);
 //  timerAlarmEnable(timer);
+
+  //Pin setup
+  pinMode(motor1Pin1, OUTPUT);
+  pinMode(motor1Pin2, OUTPUT);
+  pinMode(enA, OUTPUT);
+  pinMode(motor2Pin1, OUTPUT);
+  pinMode(motor2Pin2, OUTPUT);
+  pinMode(enB, OUTPUT);
+  digitalWrite(motor1Pin1, HIGH);
+  digitalWrite(motor1Pin2, LOW);
+  digitalWrite(motor2Pin1, LOW);
+  digitalWrite(motor2Pin2, HIGH);
 }
 
 // MQTT Call back
@@ -75,5 +96,13 @@ void loop()
   client.loop();
   sprintf(payload, "%s current state is %d", robotName, state);
   client.publish("irobot/feedback", payload); 
+  if (state == STOP){
+    digitalWrite(enA, LOW);
+    digitalWrite(enB, LOW);
+  }
+  else if (state == RUN){
+    digitalWrite(enA, HIGH);
+    digitalWrite(enB, HIGH);
+  }
   delay(1000);
 }
