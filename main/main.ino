@@ -3,12 +3,12 @@
 #include "EspMQTTClient.h"
 
 // WiFi and MQTT parameters
-const char* robotName = "i-robot07";
+const char* robotName = "i-robot17";
 const char* wifiSSID = "ME588G4";
 const char* wifiPassword = "1n1t1al0";
-const char* brokerIP = "192.168.1.147";
+const char* brokerIP = "192.168.1.139";
 const short brokerPort = 8883;
-const char* robotID = "07";
+const char* robotID = "17";
 
 // create MQTT client
 EspMQTTClient client(
