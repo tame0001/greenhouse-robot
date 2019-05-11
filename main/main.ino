@@ -34,10 +34,11 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 void IRAM_ATTR onTimer(){
   portENTER_CRITICAL_ISR(&timerMux);
   sprintf(payload, "%s current state is %d", robotName, state);
-  if (client.isConnected() == 1){
+//  readIRData();
+//  if (client.isConnected() == 1){
 //    Serial.println(payload);
-    client.publish("irobot/feedback", payload);
-  } 
+//    client.publish("irobot/feedback", payload);
+//  } 
   portEXIT_CRITICAL_ISR(&timerMux);
 }
 
@@ -49,10 +50,18 @@ const char enA = 5;
 const char motor2Pin1 = 16;
 const char motor2Pin2 = 17;
 const char enB = 4;
+//Setting PWM properties
+const unsigned int freq = 30000;
+const char pwmChannelB = 1;
+const char pwmChannelA = 0;
+const char resolution = 8;
+//Movement parameters
+const int baseSpeed = 80;
+const int KP = 10;
 
 //Line follower parameters
 unsigned char lineData[16];
-int theshore =  70;
+int theshore = 200;
 
 void setup()
 {
@@ -68,14 +77,21 @@ void setup()
   //Pin setup
   pinMode(motor1Pin1, OUTPUT);
   pinMode(motor1Pin2, OUTPUT);
-  pinMode(enA, OUTPUT);
   pinMode(motor2Pin1, OUTPUT);
   pinMode(motor2Pin2, OUTPUT);
-  pinMode(enB, OUTPUT);
   digitalWrite(motor1Pin1, HIGH);
   digitalWrite(motor1Pin2, LOW);
   digitalWrite(motor2Pin1, LOW);
   digitalWrite(motor2Pin2, HIGH);
+  ledcSetup(pwmChannelA, freq, resolution);
+  ledcSetup(pwmChannelB, freq, resolution);
+  ledcAttachPin(enA, pwmChannelA);
+  ledcAttachPin(enB, pwmChannelB);
+}
+
+void reportState(){
+  sprintf(payload, "%s current state is %d", robotName, state);
+  client.publish("irobot/feedback", payload); 
 }
 
 // MQTT Call back
@@ -91,10 +107,23 @@ void onConnectionEstablished()
     else if (payload == "r"){
       state = RUN;
     }
+    reportState();
   });
 
   sprintf(payload, "%s is connected", robotName);
   client.publish("irobot/feedback", payload); 
+}
+
+int cramp(int value, int minimum, int maximum){
+  if (value > maximum){
+    return maximum;
+  }
+  else if(value < minimum){
+    return minimum;
+  }
+  else{
+    return value;
+  }
 }
 
 void readIRData(){
@@ -110,6 +139,21 @@ void readIRData(){
     else
       t = 0;
   }
+}
+
+int analyzeIRData(){
+  int sum = 0;
+  for (int i=0; i<16; i+=2){
+    if (lineData[i] > theshore){
+      if (i < 8){
+        sum++;
+      }
+      else{
+        sum--;
+      }
+    }
+  }
+  return sum;
 }
 
 void printIRDataRaw(){
@@ -133,18 +177,30 @@ void printIRDataRaw(){
 
 void loop()
 {
+  static int leftSpeed, rightSpeed, feedbackErr;
   client.loop();
   readIRData();
-  printIRDataRaw();
-  sprintf(payload, "%s current state is %d", robotName, state);
-  client.publish("irobot/feedback", payload); 
+  printIRDataRaw(); 
+  Serial.println(analyzeIRData());
   if (state == STOP){
-    digitalWrite(enA, LOW);
-    digitalWrite(enB, LOW);
+    leftSpeed = 0;
+    rightSpeed = 0;
   }
   else if (state == RUN){
-    digitalWrite(enA, HIGH);
-    digitalWrite(enB, HIGH);
+    feedbackErr = analyzeIRData();
+    leftSpeed = baseSpeed + feedbackErr * KP;
+    rightSpeed = baseSpeed - feedbackErr * KP;
+    leftSpeed = cramp(leftSpeed, 0, 100);
+    rightSpeed = cramp(rightSpeed, 0, 100);
+    
+//    leftSpeed = baseSpeed;
+//    rightSpeed = baseSpeed;
   }
-  delay(1000);
+  Serial.println(leftSpeed);
+  Serial.println(rightSpeed);
+  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
+  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
+  ledcWrite(pwmChannelB, leftSpeed);
+  ledcWrite(pwmChannelA, rightSpeed);
+  delay(100);
 }
