@@ -1,5 +1,6 @@
 #include <PubSubClient.h>
 #include <WiFi.h>
+#include <Wire.h>
 #include "EspMQTTClient.h"
 
 // WiFi and MQTT parameters
@@ -49,8 +50,13 @@ const char motor2Pin1 = 16;
 const char motor2Pin2 = 17;
 const char enB = 4;
 
+//Line follower parameters
+unsigned char lineData[16];
+int theshore =  70;
+
 void setup()
 {
+  Wire.begin();
   Serial.begin(115200);
   client.enableDebuggingMessages();
 //  timer setup ** doesn't work with publish function **
@@ -91,9 +97,45 @@ void onConnectionEstablished()
   client.publish("irobot/feedback", payload); 
 }
 
+void readIRData(){
+  unsigned char t;
+
+  Wire.requestFrom(9, 16);
+  Serial.println("Reading Line Sensor");
+  while (Wire.available())   
+  {
+    lineData[t] = Wire.read(); 
+    if (t < 15)
+      t++;
+    else
+      t = 0;
+  }
+}
+
+void printIRDataRaw(){
+  Serial.print("lineData[0]:");
+  Serial.println(lineData[0]);
+  Serial.print("lineData[2]:");
+  Serial.println(lineData[2]);
+  Serial.print("lineData[4]:");
+  Serial.println(lineData[4]);
+  Serial.print("lineData[6]:");
+  Serial.println(lineData[6]);
+  Serial.print("lineData[8]:");
+  Serial.println(lineData[8]);
+  Serial.print("lineData[10]:");
+  Serial.println(lineData[10]);
+  Serial.print("lineData[12]:");
+  Serial.println(lineData[12]);
+  Serial.print("lineData[14]:");
+  Serial.println(lineData[14]);
+}
+
 void loop()
 {
   client.loop();
+  readIRData();
+  printIRDataRaw();
   sprintf(payload, "%s current state is %d", robotName, state);
   client.publish("irobot/feedback", payload); 
   if (state == STOP){
