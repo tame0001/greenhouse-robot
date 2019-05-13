@@ -1,4 +1,46 @@
+#include <PubSubClient.h>
 #include <WiFi.h>
+#include <Wire.h>
+#include "EspMQTTClient.h"
+
+// WiFi and MQTT parameters
+const char* robotName = "i-robot17";
+const char* wifiSSID = "ME588G4";
+const char* wifiPassword = "1n1t1al0";
+const char* brokerIP = "192.168.1.139";
+const short brokerPort = 8883;
+const char* robotID = "17";
+
+// create MQTT client
+EspMQTTClient client(
+  wifiSSID,
+  wifiPassword,
+  brokerIP,   
+  robotName,
+  brokerPort              
+);
+
+char payload[30];
+char commandTopic[30];
+
+enum State {STOP, RUN};
+State state = RUN;
+
+// timer
+volatile int interruptCounter;
+hw_timer_t* timer = NULL;
+portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
+
+void IRAM_ATTR onTimer(){
+  portENTER_CRITICAL_ISR(&timerMux);
+  sprintf(payload, "%s current state is %d", robotName, state);
+//  readIRData();
+//  if (client.isConnected() == 1){
+//    Serial.println(payload);
+//    client.publish("irobot/feedback", payload);
+//  } 
+  portEXIT_CRITICAL_ISR(&timerMux);
+}
 
 //Right Motor Pins
 const char motor1Pin1 = 18;
@@ -19,12 +61,19 @@ const int KP = 10;
 
 //Line follower parameters
 unsigned char lineData[16];
-int theshore = 200;
+int theshore = 140;
+String lineResult;
 
 void setup()
 {
   Wire.begin();
   Serial.begin(115200);
+  client.enableDebuggingMessages();
+//  timer setup ** doesn't work with publish function **
+//  timer = timerBegin(0, 80, true);
+//  timerAttachInterrupt(timer, &onTimer, true);
+//  timerAlarmWrite(timer, 1000000, true);
+//  timerAlarmEnable(timer);
 
   //Pin setup
   pinMode(motor1Pin1, OUTPUT);
@@ -39,6 +88,31 @@ void setup()
   ledcSetup(pwmChannelB, freq, resolution);
   ledcAttachPin(enA, pwmChannelA);
   ledcAttachPin(enB, pwmChannelB);
+}
+
+void reportState(){
+  sprintf(payload, "%s current state is %d", robotName, state);
+  client.publish("irobot/feedback", payload); 
+}
+
+// MQTT Call back
+void onConnectionEstablished()
+{
+  sprintf(commandTopic, "irobot/command/%s", robotID);
+  client.subscribe(commandTopic, [](const String & payload) {
+    Serial.print("Recieve message: ");
+    Serial.println(payload);
+    if (payload == "s"){
+      state = STOP;
+    }
+    else if (payload == "r"){
+      state = RUN;
+    }
+    reportState();
+  });
+
+  sprintf(payload, "%s is connected", robotName);
+  client.publish("irobot/feedback", payload); 
 }
 
 int cramp(int value, int minimum, int maximum){
@@ -100,6 +174,19 @@ void printIRDataRaw(){
   Serial.println(lineData[12]);
   Serial.print("lineData[14]:");
   Serial.println(lineData[14]);
+
+  lineResult = "";
+  for(int i=0; i<8; i++){
+    if(lineData[i*2] > theshore){
+//    Serial.println("1");
+    lineResult.concat("1");
+    }
+    else{
+//      Serial.println("0");
+      lineResult.concat("0");
+    }
+  }
+  Serial.println(lineResult);
 }
 
 void loop()
@@ -123,7 +210,9 @@ void loop()
 //    leftSpeed = baseSpeed;
 //    rightSpeed = baseSpeed;
   }
+  Serial.print("leftSpeed: ");
   Serial.println(leftSpeed);
+  Serial.print("rightSpeed: ");
   Serial.println(rightSpeed);
   leftSpeed = map(leftSpeed, 0, 100, 0, 255);
   rightSpeed = map(rightSpeed, 0, 100, 0, 255);

@@ -196,7 +196,9 @@ void loop()
 //    leftSpeed = baseSpeed;
 //    rightSpeed = baseSpeed;
   }
+  Serial.print("leftSpeed: ");
   Serial.println(leftSpeed);
+  Serial.print("rightSpeed: ");
   Serial.println(rightSpeed);
   leftSpeed = map(leftSpeed, 0, 100, 0, 255);
   rightSpeed = map(rightSpeed, 0, 100, 0, 255);
