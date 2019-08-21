@@ -5,10 +5,10 @@
 
 // WiFi and MQTT parameters
 const char* robotName = "i-robot17";
-const char* wifiSSID = "ME588G4";
+const char* wifiSSID = "i-robot";
 const char* wifiPassword = "1n1t1al0";
-const char* brokerIP = "192.168.1.139";
-const short brokerPort = 8883;
+const char* brokerIP = "128.46.109.133";
+const short brokerPort = 1883;
 const char* robotID = "17";
 
 // create MQTT client
@@ -92,6 +92,11 @@ void setup()
 void reportState(){
   sprintf(payload, "%s current state is %d", robotName, state);
   client.publish("irobot/feedback", payload); 
+}
+
+void reportParameters(int left, int right){
+  sprintf(payload, "%s:%d:%d", robotName, left, right);
+  client.publish("irobot/parameters", payload); 
 }
 
 // MQTT Call back
@@ -178,9 +183,11 @@ void printIRDataRaw(){
 void loop()
 {
   static int leftSpeed, rightSpeed, feedbackErr;
+  Serial.println("----------------------------------------");
   client.loop();
   readIRData();
   printIRDataRaw(); 
+  Serial.print("IR Data: ");
   Serial.println(analyzeIRData());
   if (state == STOP){
     leftSpeed = 0;
@@ -204,5 +211,6 @@ void loop()
   rightSpeed = map(rightSpeed, 0, 100, 0, 255);
   ledcWrite(pwmChannelB, leftSpeed);
   ledcWrite(pwmChannelA, rightSpeed);
-  delay(100);
+  reportParameters(leftSpeed, rightSpeed);
+  delay(1000);
 }
