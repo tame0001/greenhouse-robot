@@ -16,11 +16,23 @@ export class LineSensorComponent implements OnInit, OnDestroy {
     this.subscription = this.mqttService.observe('irobot/parameters').subscribe((
       message: IMqttMessage) => {
         this.message = message.payload.toString();
-        console.log(this.message)
+        console.log(this.message);
       });
    }
 
+  sendRun() {
+    this.unsafePublish('irobot/command/17', 'r');
+  }
+
+  sendStop() {
+    this.unsafePublish('irobot/command/17', 's');
+  }
+
   ngOnInit() {
+  }
+
+  public unsafePublish(topic: string, message: string): void {
+    this.mqttService.unsafePublish(topic, message, {qos: 1, retain: true});
   }
 
   public ngOnDestroy() {
