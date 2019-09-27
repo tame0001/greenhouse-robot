@@ -1,5 +1,5 @@
-#include <PubSubClient.h>
-#include <WiFi.h>
+//#include <PubSubClient.h>
+//#include <WiFi.h>
 #include <Wire.h>
 #include "EspMQTTClient.h"
 
