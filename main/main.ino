@@ -3,6 +3,10 @@
 #include <Wire.h>
 #include "EspMQTTClient.h"
 
+//#define DEBUG
+#define MQTT_ON
+//#define TIMER_ON
+
 // WiFi and MQTT parameters
 #define robotID "17"
 #define robot "i-robot"
@@ -15,7 +19,8 @@
 char payload[30];
 char commandTopic[30];
 
-// create MQTT client
+#ifdef MQTT_ON
+  // create MQTT client
   EspMQTTClient client(
     wifiSSID,
     wifiPassword,
@@ -23,25 +28,24 @@ char commandTopic[30];
     robotName,
     brokerPort              
   );
+#endif
 
 enum State {STOP, RUN};
 State state = STOP;
 
-// timer
-volatile int interruptCounter;
-hw_timer_t* timer = NULL;
-portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
-
-void IRAM_ATTR onTimer(){
-  portENTER_CRITICAL_ISR(&timerMux);
-  sprintf(payload, "%s current state is %d", robotName, state);
-//  readIRData();
-//  if (client.isConnected() == 1){
-//    Serial.println(payload);
-//    client.publish("irobot/feedback", payload);
-//  } 
-  portEXIT_CRITICAL_ISR(&timerMux);
-}
+#ifdef TIMER_ON
+  // timer
+  volatile int interruptCounter;
+  hw_timer_t* timer = NULL;
+  portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
+  
+  void IRAM_ATTR onTimer(){
+    portENTER_CRITICAL_ISR(&timerMux);
+    sprintf(payload, "%s current state is %d", robotName, state);
+    Serial.println("Timer Overflow");
+    portEXIT_CRITICAL_ISR(&timerMux);
+  }
+#endif
 
 //Right Motor Pins
 const char motor1Pin1 = 18;
@@ -56,10 +60,10 @@ const unsigned int freq = 30000;
 const char pwmChannelB = 1;
 const char pwmChannelA = 0;
 const char resolution = 8;
+
 //Movement parameters
 const int baseSpeed = 80;
 const int KP = 10;
-
 //Line follower parameters
 unsigned char lineData[16];
 int theshore = 200;
@@ -69,12 +73,17 @@ void setup()
   Wire.begin();
   Serial.begin(115200);
   
-  client.enableDebuggingMessages();
-//  timer setup ** doesn't work with publish function **
-//  timer = timerBegin(0, 80, true);
-//  timerAttachInterrupt(timer, &onTimer, true);
-//  timerAlarmWrite(timer, 1000000, true);
-//  timerAlarmEnable(timer);
+  #ifdef MQTT_ON
+    client.enableDebuggingMessages();
+  #endif
+
+  #ifdef TIMER_ON
+  //  timer setup ** doesn't work with publish function **
+    timer = timerBegin(0, 80, true);
+    timerAttachInterrupt(timer, &onTimer, true);
+    timerAlarmWrite(timer, 1000000, true);
+    timerAlarmEnable(timer);
+  #endif
 
   //Pin setup
   pinMode(motor1Pin1, OUTPUT);
@@ -91,35 +100,37 @@ void setup()
   ledcAttachPin(enB, pwmChannelB);
 }
 
-void reportState(){
-  sprintf(payload, "%s current state is %d", robotName, state);
-  client.publish("irobot/feedback", payload); 
-}
+#ifdef MQTT_ON
+  void reportState(){
+    sprintf(payload, "%s current state is %d", robotName, state);
+    client.publish("irobot/feedback", payload); 
+  }
+  
+  void reportParameters(int left, int right){
+    sprintf(payload, "%s:%d:%d", robotName, left, right);
+    client.publish("irobot/parameters", payload); 
+  }
 
-void reportParameters(int left, int right){
-  sprintf(payload, "%s:%d:%d", robotName, left, right);
-//  client.publish("irobot/parameters", payload); 
-}
-
-// MQTT Call back
-void onConnectionEstablished()
-{
-  sprintf(commandTopic, "irobot/command/%s", robotID);
-  client.subscribe(commandTopic, [](const String & payload) {
-    Serial.print("Recieve message: ");
-    Serial.println(payload);
-    if (payload == "s"){
-      state = STOP;
-    }
-    else if (payload == "r"){
-      state = RUN;
-    }
-    reportState();
-  });
-
-  sprintf(payload, "%s is connected", robotName);
-  client.publish("irobot/feedback", payload); 
-}
+  // MQTT Call back
+  void onConnectionEstablished()
+  {
+    sprintf(commandTopic, "irobot/command/%s", robotID);
+    client.subscribe(commandTopic, [](const String & payload) {
+      Serial.print("Recieve message: ");
+      Serial.println(payload);
+      if (payload == "s"){
+        state = STOP;
+      }
+      else if (payload == "r"){
+        state = RUN;
+      }
+      reportState();
+    });
+  
+    sprintf(payload, "%s is connected", robotName);
+    client.publish("irobot/feedback", payload); 
+  }
+#endif
 
 int cramp(int value, int minimum, int maximum){
   if (value > maximum){
@@ -185,12 +196,19 @@ void printIRDataRaw(){
 void loop()
 {
   static int leftSpeed, rightSpeed, feedbackErr;
-  Serial.println("----------------------------------------");
-  client.loop();
-  readIRData();
-  printIRDataRaw(); 
-  Serial.print("IR Data: ");
-  Serial.println(analyzeIRData());
+  
+  #ifdef DEBUG
+    Serial.println("----------------------------------------");
+    readIRData();
+    printIRDataRaw(); 
+    Serial.print("IR Data: ");
+    Serial.println(analyzeIRData());
+  #endif
+
+  #ifdef MQTT_ON
+    client.loop();
+  #endif
+  
   if (state == STOP){
     leftSpeed = 0;
     rightSpeed = 0;
@@ -201,18 +219,22 @@ void loop()
     rightSpeed = baseSpeed - feedbackErr * KP;
     leftSpeed = cramp(leftSpeed, 0, 100);
     rightSpeed = cramp(rightSpeed, 0, 100);
-    
-//    leftSpeed = baseSpeed;
-//    rightSpeed = baseSpeed;
   }
-  Serial.print("leftSpeed: ");
-  Serial.println(leftSpeed);
-  Serial.print("rightSpeed: ");
-  Serial.println(rightSpeed);
+
+  #ifdef DEBUG
+    Serial.print("leftSpeed: ");
+    Serial.println(leftSpeed);
+    Serial.print("rightSpeed: ");
+    Serial.println(rightSpeed);
+  #endif
+  
   leftSpeed = map(leftSpeed, 0, 100, 0, 255);
   rightSpeed = map(rightSpeed, 0, 100, 0, 255);
   ledcWrite(pwmChannelB, leftSpeed);
   ledcWrite(pwmChannelA, rightSpeed);
-  reportParameters(leftSpeed, rightSpeed);
-//  delay(1000);
+
+  #ifdef MQTT_ON
+    reportParameters(leftSpeed, rightSpeed);
+  #endif
+  delay(1000);
 }
