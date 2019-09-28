@@ -4,24 +4,25 @@
 #include "EspMQTTClient.h"
 
 // WiFi and MQTT parameters
-const char* robotName = "i-robot17";
-const char* wifiSSID = "i-robot";
-const char* wifiPassword = "1n1t1al0";
-const char* brokerIP = "128.46.109.133";
-const short brokerPort = 1883;
-const char* robotID = "17";
-
-// create MQTT client
-EspMQTTClient client(
-  wifiSSID,
-  wifiPassword,
-  brokerIP,   
-  robotName,
-  brokerPort              
-);
+#define robotID "17"
+#define robot "i-robot"
+#define robotName robot robotID
+#define wifiSSID "i-robot"
+#define wifiPassword "1n1t1al0"
+#define brokerIP "128.46.109.133"
+#define brokerPort 1883
 
 char payload[30];
 char commandTopic[30];
+
+// create MQTT client
+  EspMQTTClient client(
+    wifiSSID,
+    wifiPassword,
+    brokerIP,   
+    robotName,
+    brokerPort              
+  );
 
 enum State {STOP, RUN};
 State state = STOP;
@@ -67,6 +68,7 @@ void setup()
 {
   Wire.begin();
   Serial.begin(115200);
+  
   client.enableDebuggingMessages();
 //  timer setup ** doesn't work with publish function **
 //  timer = timerBegin(0, 80, true);
@@ -96,7 +98,7 @@ void reportState(){
 
 void reportParameters(int left, int right){
   sprintf(payload, "%s:%d:%d", robotName, left, right);
-  client.publish("irobot/parameters", payload); 
+//  client.publish("irobot/parameters", payload); 
 }
 
 // MQTT Call back
@@ -212,5 +214,5 @@ void loop()
   ledcWrite(pwmChannelB, leftSpeed);
   ledcWrite(pwmChannelA, rightSpeed);
   reportParameters(leftSpeed, rightSpeed);
-  delay(1000);
+//  delay(1000);
 }
