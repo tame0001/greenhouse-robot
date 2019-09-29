@@ -133,13 +133,13 @@ void setup()
 #ifdef MQTT_ON
 //  Report robot current state of operation
   void reportState(){
-    sprintf(payload, "%s:%d", robotName, state);
+    sprintf(payload, "%s:%d", robotID, state);
     client.publish("irobot/feedback", payload); 
   }
   
 //  Report current operation parameters
   void reportParameters(int left, int right){
-    sprintf(payload, "%s:%d:%d", robotName, left, right);
+    sprintf(payload, "%s:%d:%d", robotID, left, right);
     client.publish("irobot/parameters", payload); 
   }
   
@@ -147,18 +147,21 @@ void setup()
   void onConnectionEstablished()
   {
     sprintf(commandTopic, "irobot/command/%s", robotID);
+    
 //    subcription to command topic
     client.subscribe(commandTopic, [](const String & payload) {
       #ifdef DEBUG
         Serial.print("Recieve message: ");
         Serial.println(payload);
       #endif
+
       if (payload == "s"){
         state = STOP;
       }
       else if (payload == "r"){
         state = RUN;
       }
+      
       reportState();
     }); 
   }
@@ -249,6 +252,7 @@ void timer1Service(){
 void loop()
 { 
   #ifdef DEBUG
+    delay(1000);
     Serial.println("----------------------------------------");
     readIRData();
     printIRDataRaw(); 
@@ -278,11 +282,6 @@ void loop()
     Serial.print("rightSpeed: ");
     Serial.println(rightSpeed);
   #endif
-  
-  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
-  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
-  ledcWrite(pwmChannelB, leftSpeed);
-  ledcWrite(pwmChannelA, rightSpeed);
 
   if (flagTimer0){
     timer0Service();
@@ -291,4 +290,11 @@ void loop()
   if (flagTimer1){
     timer1Service();
   }
+  
+  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
+  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
+  ledcWrite(pwmChannelB, leftSpeed);
+  ledcWrite(pwmChannelA, rightSpeed);
+
+  
 }
