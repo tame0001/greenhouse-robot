@@ -32,7 +32,7 @@ export class LineSensorComponent implements OnInit, OnDestroy {
   }
 
   public unsafePublish(topic: string, message: string): void {
-    this.mqttService.unsafePublish(topic, message, {qos: 1, retain: true});
+    this.mqttService.unsafePublish(topic, message, {qos: 1, retain: false});
   }
 
   public ngOnDestroy() {
