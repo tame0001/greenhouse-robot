@@ -17,6 +17,7 @@ export class LineSensorComponent implements OnInit, OnDestroy {
   public robotID: string;
   public letfSpeed: string;
   public rightSpeed: string;
+  public conmmandTopic: string;
 
   constructor(private mqttService: MqttService) {
 
@@ -29,6 +30,7 @@ export class LineSensorComponent implements OnInit, OnDestroy {
         this.robotID = this.splitedMessage[0];
         this.letfSpeed = this.splitedMessage[1];
         this.rightSpeed = this.splitedMessage[2];
+        this.conmmandTopic = 'irobot/command/'.concat(this.robotID);
       });
 
     this.feedbackSub = this.mqttService.observe('irobot/feedback').subscribe((
@@ -47,19 +49,19 @@ export class LineSensorComponent implements OnInit, OnDestroy {
    }
 
   sendRun() {
-    this.unsafePublish('irobot/command/17', 'r');
+    this.unsafePublish(this.conmmandTopic, 'r');
   }
 
   sendStop() {
-    this.unsafePublish('irobot/command/17', 's');
+    this.unsafePublish(this.conmmandTopic, 's');
   }
 
   sendPing() {
-    this.unsafePublish('irobot/command/17', 'p');
+    this.unsafePublish(this.conmmandTopic, 'p');
   }
 
   ngOnInit() {
-    this.sendPing()
+    // this.sendPing();
   }
 
   public unsafePublish(topic: string, message: string): void {
