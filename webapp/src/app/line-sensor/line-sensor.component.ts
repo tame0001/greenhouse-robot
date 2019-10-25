@@ -39,10 +39,22 @@ export class LineSensorComponent implements OnInit, OnDestroy {
           console.log(this.mqttMessage);
           this.splitedMessage = this.mqttMessage.split(':');
           this.robotID = this.splitedMessage[0];
-          if (this.splitedMessage[1] === '1') {
-            this.currentStatus = 'RUNNING';
-          } else {
-            this.currentStatus = 'STOPPING';
+          switch (this.splitedMessage[1]) {
+            case '1':
+              this.currentStatus = 'RUNNING';
+              break;
+            case '2':
+              this.currentStatus = 'TURNING 180';
+              break;
+            case '3':
+              this.currentStatus = 'TURNING LEFT';
+              break;
+            case '4':
+              this.currentStatus = 'TURNING RIGHT';
+              break;
+            default:
+              this.currentStatus = 'STOPPING';
+              break;
           }
 
         });
