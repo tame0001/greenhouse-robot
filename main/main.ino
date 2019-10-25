@@ -7,7 +7,7 @@
 //---------------------------------------------------------------
 
 // WiFi and MQTT parameters
-#define robotID "17"
+#define robotID "1"
 #define robot "i-robot"
 #define robotName robot robotID
 #define wifiSSID "i-robot"
@@ -31,7 +31,7 @@
 int leftSpeed, rightSpeed, feedbackErr;
 char payload[30];
 char commandTopic[30];
-enum State {STOP, RUN};
+enum State {STOP, RUN, TURN, LEFT, RIGHT};
 State state = STOP;
 
 //---------------------------------------------------------------
@@ -158,8 +158,20 @@ void setup()
       if (payload == "s"){
         state = STOP;
       }
-      else if (payload == "r"){
+      else if (payload == "w"){
         state = RUN;
+      }
+
+      else if (payload == "r"){
+        state = TURN;
+      }
+
+      else if (payload == "q"){
+        state = LEFT;
+      }
+
+      else if (payload == "e"){
+        state = RIGHT;
       }
       
       reportState();
@@ -274,6 +286,30 @@ void loop()
     rightSpeed = baseSpeed - feedbackErr * KP;
     leftSpeed = cramp(leftSpeed, 0, 100);
     rightSpeed = cramp(rightSpeed, 0, 100);
+  }
+
+  else if (state == TURN){
+//    feedbackErr = analyzeIRData();
+//    leftSpeed = baseSpeed + feedbackErr * KP;
+//    rightSpeed = baseSpeed - feedbackErr * KP;
+//    leftSpeed = cramp(leftSpeed, 0, 100);
+//    rightSpeed = cramp(rightSpeed, 0, 100);
+  }
+
+  else if (state == LEFT){
+//    feedbackErr = analyzeIRData();
+//    leftSpeed = baseSpeed + feedbackErr * KP;
+//    rightSpeed = baseSpeed - feedbackErr * KP;
+//    leftSpeed = cramp(leftSpeed, 0, 100);
+//    rightSpeed = cramp(rightSpeed, 0, 100);
+  }
+
+  else if (state == RIGHT){
+//    feedbackErr = analyzeIRData();
+//    leftSpeed = baseSpeed + feedbackErr * KP;
+//    rightSpeed = baseSpeed - feedbackErr * KP;
+//    leftSpeed = cramp(leftSpeed, 0, 100);
+//    rightSpeed = cramp(rightSpeed, 0, 100);
   }
 
   #ifdef DEBUG
