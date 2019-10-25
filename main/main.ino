@@ -261,6 +261,50 @@ void timer1Service(){
 }
 
 //---------------------------------------------------------------
+
+void turnHandler(long turning_time, int turning_direction){
+  if (turning_direction == LEFT){
+    digitalWrite(motor1Pin1, LOW);
+    digitalWrite(motor1Pin2, HIGH);
+    digitalWrite(motor2Pin1, LOW);
+    digitalWrite(motor2Pin2, HIGH);
+  }
+  else if (turning_direction == RIGHT){
+    digitalWrite(motor1Pin1, HIGH);
+    digitalWrite(motor1Pin2, LOW);
+    digitalWrite(motor2Pin1, HIGH);
+    digitalWrite(motor2Pin2, LOW);
+  }
+  
+  leftSpeed = baseSpeed;
+  rightSpeed = baseSpeed;
+  leftSpeed = cramp(leftSpeed, 0, 100);
+  rightSpeed = cramp(rightSpeed, 0, 100);
+  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
+  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
+  ledcWrite(pwmChannelB, leftSpeed);
+  ledcWrite(pwmChannelA, rightSpeed);
+
+  long start_time = millis();
+  while(millis() - start_time < turning_time){
+    
+  }
+  leftSpeed = 0;
+  rightSpeed = 0;
+  leftSpeed = cramp(leftSpeed, 0, 100);
+  rightSpeed = cramp(rightSpeed, 0, 100);
+  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
+  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
+  ledcWrite(pwmChannelB, leftSpeed);
+  ledcWrite(pwmChannelA, rightSpeed);
+  digitalWrite(motor1Pin1, HIGH);
+  digitalWrite(motor1Pin2, LOW);
+  digitalWrite(motor2Pin1, LOW);
+  digitalWrite(motor2Pin2, HIGH);
+  
+}
+
+//---------------------------------------------------------------
 void loop()
 { 
   #ifdef DEBUG
@@ -289,27 +333,19 @@ void loop()
   }
 
   else if (state == TURN){
-//    feedbackErr = analyzeIRData();
-//    leftSpeed = baseSpeed + feedbackErr * KP;
-//    rightSpeed = baseSpeed - feedbackErr * KP;
-//    leftSpeed = cramp(leftSpeed, 0, 100);
-//    rightSpeed = cramp(rightSpeed, 0, 100);
+    turnHandler(1800, LEFT);
+    turnHandler(1800, LEFT);
+    state = STOP;
   }
 
   else if (state == LEFT){
-//    feedbackErr = analyzeIRData();
-//    leftSpeed = baseSpeed + feedbackErr * KP;
-//    rightSpeed = baseSpeed - feedbackErr * KP;
-//    leftSpeed = cramp(leftSpeed, 0, 100);
-//    rightSpeed = cramp(rightSpeed, 0, 100);
+    turnHandler(1800, LEFT);
+    state = STOP;
   }
 
   else if (state == RIGHT){
-//    feedbackErr = analyzeIRData();
-//    leftSpeed = baseSpeed + feedbackErr * KP;
-//    rightSpeed = baseSpeed - feedbackErr * KP;
-//    leftSpeed = cramp(leftSpeed, 0, 100);
-//    rightSpeed = cramp(rightSpeed, 0, 100);
+    turnHandler(1800, RIGHT);
+    state = STOP;
   }
 
   #ifdef DEBUG
