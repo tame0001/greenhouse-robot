@@ -26,7 +26,7 @@ export class LineSensorComponent implements OnInit, OnDestroy {
         this.mqttMessage = message.payload.toString();
         console.log(this.mqttMessage);
         this.splitedMessage = this.mqttMessage.split(':');
-        console.log(this.splitedMessage);
+        // console.log(this.splitedMessage);
         this.robotID = this.splitedMessage[0];
         this.letfSpeed = this.splitedMessage[1];
         this.rightSpeed = this.splitedMessage[2];
@@ -49,7 +49,7 @@ export class LineSensorComponent implements OnInit, OnDestroy {
    }
 
   sendRun() {
-    this.unsafePublish(this.conmmandTopic, 'r');
+    this.unsafePublish(this.conmmandTopic, 'w');
   }
 
   sendStop() {
@@ -58,6 +58,18 @@ export class LineSensorComponent implements OnInit, OnDestroy {
 
   sendPing() {
     this.unsafePublish(this.conmmandTopic, 'p');
+  }
+
+  sendLeft() {
+    this.unsafePublish(this.conmmandTopic, 'q');
+  }
+
+  sendRight() {
+    this.unsafePublish(this.conmmandTopic, 'e');
+  }
+
+  sendTurn() {
+    this.unsafePublish(this.conmmandTopic, 'r');
   }
 
   ngOnInit() {
