@@ -3,7 +3,7 @@ unsigned char t;
 //void send_data(short a1,short b1,short c1,short d1,short e1,short f1);
 unsigned char data[16];
 String result;
-int theshore =  70;
+int theshore =  220;
 void setup()
 {
   Wire.begin();        // join i2c bus (address optional for master)

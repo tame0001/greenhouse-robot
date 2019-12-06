@@ -55,19 +55,23 @@ const unsigned int freq = 30000;
 const char pwmChannelB = 1;
 const char pwmChannelA = 0;
 const char resolution = 8;
-//Movement parameters
+//Movement parameters (initial)
 const int baseSpeed = 80;
-const int KP = 10;
+const int KP = 5;
 
 //Line follower parameters
-unsigned char lineData[16];
-int theshore = 140;
+unsigned char data[16];
+int theshore = 300;
 String lineResult;
+unsigned char t;
 
 void setup()
 {
   Wire.begin();
   Serial.begin(115200);
+  t = 0;
+  Serial.println("Setup");
+  
   client.enableDebuggingMessages();
 //  timer setup ** doesn't work with publish function **
 //  timer = timerBegin(0, 80, true);
@@ -134,7 +138,7 @@ void readIRData(){
   Serial.println("Reading Line Sensor");
   while (Wire.available())   
   {
-    lineData[t] = Wire.read(); 
+    data[t] = Wire.read(); 
     if (t < 15)
       t++;
     else
@@ -145,7 +149,7 @@ void readIRData(){
 int analyzeIRData(){
   int sum = 0;
   for (int i=0; i<16; i+=2){
-    if (lineData[i] > theshore){
+    if (data[i] > theshore){
       if (i < 8){
         sum++;
       }
@@ -158,26 +162,26 @@ int analyzeIRData(){
 }
 
 void printIRDataRaw(){
-  Serial.print("lineData[0]:");
-  Serial.println(lineData[0]);
-  Serial.print("lineData[2]:");
-  Serial.println(lineData[2]);
-  Serial.print("lineData[4]:");
-  Serial.println(lineData[4]);
-  Serial.print("lineData[6]:");
-  Serial.println(lineData[6]);
-  Serial.print("lineData[8]:");
-  Serial.println(lineData[8]);
-  Serial.print("lineData[10]:");
-  Serial.println(lineData[10]);
-  Serial.print("lineData[12]:");
-  Serial.println(lineData[12]);
-  Serial.print("lineData[14]:");
-  Serial.println(lineData[14]);
+  Serial.print("data[0]:");
+  Serial.println(data[0]);
+  Serial.print("data[2]:");
+  Serial.println(data[2]);
+  Serial.print("data[4]:");
+  Serial.println(data[4]);
+  Serial.print("data[6]:");
+  Serial.println(data[6]);
+  Serial.print("data[8]:");
+  Serial.println(data[8]);
+  Serial.print("data[10]:");
+  Serial.println(data[10]);
+  Serial.print("data[12]:");
+  Serial.println(data[12]);
+  Serial.print("data[14]:");
+  Serial.println(data[14]);
 
   lineResult = "";
   for(int i=0; i<8; i++){
-    if(lineData[i*2] > theshore){
+    if(data[i*2] > theshore){
 //    Serial.println("1");
     lineResult.concat("1");
     }
