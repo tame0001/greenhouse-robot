@@ -1,0 +1,13 @@
+<p> Robot ID = {{ robotID }} </p>
+<p> Left Speed = {{ letfSpeed }} % </p>
+<p> Right Speed = {{ rightSpeed }} % </p>
+<p> Current Status = {{ currentStatus }} </p> 
+<button (click)="sendRun()"> Run </button>
+<!-- <button (click)="sendPing()"> Ping </button> -->
+<button (click)="sendLeft()"> Left </button>
+<button (click)="sendTurn()"> 180 </button>
+<button (click)="sendRight()"> Right </button>
+<button (click)="sendStop()"> Stop </button>
+
+<p> Current Driving Time = {{ drivingTime }}</p>
+<p> Current Turning Time = {{ turningTime }} </p>

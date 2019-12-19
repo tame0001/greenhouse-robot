@@ -1,11 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { MqttModule, IMqttServiceOptions } from 'ngx-mqtt';
+import { HttpClientModule} from '@angular/common/http';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LineSensorComponent } from './line-sensor/line-sensor.component';
-
-import { MqttModule, IMqttServiceOptions } from 'ngx-mqtt';
+import { RobotParameterComponent } from './robot-parameter/robot-parameter.component';
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
   hostname: '128.46.109.133',
@@ -16,11 +18,13 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
 @NgModule({
   declarations: [
     AppComponent,
-    LineSensorComponent
+    LineSensorComponent,
+    RobotParameterComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     MqttModule.forRoot(MQTT_SERVICE_OPTIONS)
   ],
   providers: [],
