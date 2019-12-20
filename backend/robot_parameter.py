@@ -66,7 +66,7 @@ class ParameterRequest(Resource):
         parser.add_argument('turning_time')
         args = parser.parse_args()
         # print(args)
-        print(self.write_parameter_file(robot_id ,args))
+        # print(self.write_parameter_file(robot_id ,args))
         if self.write_parameter_file(robot_id ,args):
             return {
                 'message': 'update new parameter values for robot id: {}'.format(robot_id),
