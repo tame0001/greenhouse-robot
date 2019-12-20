@@ -25,7 +25,7 @@
         <turning_time>20</turning_time>
     </robot>
     <robot id="7">
-        <driving_time>10</driving_time>
+        <driving_time>15</driving_time>
         <turning_time>20</turning_time>
     </robot>
     <robot id="8">
@@ -50,7 +50,7 @@
     </robot>
     <robot id="13">
         <driving_time>10</driving_time>
-        <turning_time>20</turning_time>
+        <turning_time>10</turning_time>
     </robot>
     <robot id="14">
         <driving_time>40</driving_time>

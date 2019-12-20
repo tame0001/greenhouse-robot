@@ -14,20 +14,20 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
 
   @Input() robotID: string;
 
-  private parameterSub: Subscription;
-  private feedbackSub: Subscription;
-  public mqttMessage: string;
-  public currentStatus: string;
-  public splitedMessage: any;
-  public letfSpeed: string;
-  public rightSpeed: string;
-  public drivingTime: string;
-  public turningTime: string;
+  parameterSub: Subscription;
+  feedbackSub: Subscription;
+  mqttMessage: string;
+  splitedMessage: any;
+  letfSpeed: string;
+  rightSpeed: string;
+  drivingTime: string;
+  turningTime: string;
+  conmmandTopic: string;
 
-  private conmmandTopic: string = 'irobot/command/'.concat(this.robotID);
-  private backendURL: string = 'http://localhost:5000';
+  currentStatus: string = 'OFFLINE';
+  backendURL: string = 'http://localhost:5000';
 
-  constructor(private mqttService: MqttService, private http:HttpClient) { 
+  constructor(private mqttService: MqttService, private http:HttpClient) {    
 
     this.parameterSub = this.mqttService.observe('irobot/parameters').subscribe((
       message: IMqttMessage) => {
@@ -103,10 +103,28 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
       // console.log(data.robot_id);
       this.drivingTime = data.driving_time;
       this.turningTime = data.turning_time;
-    })
+    });
+  }
+
+  updateParameters() {
+    // console.log(this.drivingTime);
+    // console.log(this.turningTime);
+    this.http.post(this.backendURL.concat('/parameter/').concat(this.robotID), 
+      {
+        "driving_time": this.drivingTime,
+        "turning_time": this.turningTime
+      }).subscribe(
+        data => {
+          console.log(data);
+        },
+        error => {
+          console.log(error);
+        }
+      );
   }
 
   ngOnInit() {
+    this.conmmandTopic = 'irobot/command/'.concat(this.robotID);
     this.getParameters();
   }
 

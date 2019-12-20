@@ -1,13 +1,64 @@
-<p> Robot ID = {{ robotID }} </p>
-<p> Left Speed = {{ letfSpeed }} % </p>
-<p> Right Speed = {{ rightSpeed }} % </p>
-<p> Current Status = {{ currentStatus }} </p> 
-<button (click)="sendRun()"> Run </button>
-<!-- <button (click)="sendPing()"> Ping </button> -->
-<button (click)="sendLeft()"> Left </button>
-<button (click)="sendTurn()"> 180 </button>
-<button (click)="sendRight()"> Right </button>
-<button (click)="sendStop()"> Stop </button>
-
-<p> Current Driving Time = {{ drivingTime }}</p>
-<p> Current Turning Time = {{ turningTime }} </p>
+<div class="container" style="text-align:center">
+    <div class="row">
+        <div class="col">ID = {{ robotID }}</div>
+        <div class="col">{{ currentStatus }}</div>
+    </div>
+    <div class="row">
+        <div class="col border"> {{ letfSpeed }}%</div>
+        <div class="col">Speed</div>
+        <div class="col border"> {{rightSpeed }}%</div>
+    </div>
+    <div class="row m-1">
+        <div class="col-sm-6">
+            <button type="button" class="btn btn-success" (click)="sendRun()">Run</button>
+        </div>
+        <div class="col-sm-6">
+            <button type="button" class="btn btn-danger" (click)="sendStop()">Stop</button> 
+        </div>      
+    </div>
+    <div class="row m-1">
+        <div class="col-sm-4">
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendLeft()">Left</button>
+        </div>
+        <div class="col-sm-4">
+            <button type="button" class="btn btn-outline-primary btn-sm" (click)="sendTurn()">Turn</button>
+        </div>
+        <div class="col-sm-4">
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendRight()">Right</button>
+        </div>        
+    </div>
+    <div class="row m-1">
+        <div class="row">
+            <div class="col">Driving</div> 
+            <div class="col">
+                <input 
+                type="number" 
+                class="form-control form-control-sm"
+                style="text-align: center"
+                [(ngModel)]="drivingTime"
+                >
+            </div>
+        </div>
+    </div>
+    <div class="row m-1">
+        <div class="row">
+            <div class="col">Turning</div> 
+            <div class="col">
+                <input 
+                type="number" 
+                class="form-control form-control-sm"
+                style="text-align: center"
+                [(ngModel)]="turningTime"
+                >
+            </div>
+        </div>
+    </div>
+    <div class="row m-1">
+        <div class="col">
+            <button type="button" class="btn btn-warning btn-sm" (click)="updateParameters()">Update</button>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-info btn-sm" (click)="getParameters()">Reset</button>
+        </div>
+    </div>
+</div>

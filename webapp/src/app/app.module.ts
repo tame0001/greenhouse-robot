@@ -6,6 +6,8 @@ import { HttpClientModule} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
+
 import { LineSensorComponent } from './line-sensor/line-sensor.component';
 import { RobotParameterComponent } from './robot-parameter/robot-parameter.component';
 
@@ -25,6 +27,7 @@ export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
     MqttModule.forRoot(MQTT_SERVICE_OPTIONS)
   ],
   providers: [],
