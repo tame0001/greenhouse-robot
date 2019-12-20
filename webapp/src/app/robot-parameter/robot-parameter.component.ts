@@ -25,7 +25,8 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   conmmandTopic: string;
 
   currentStatus: string = 'OFFLINE';
-  backendURL: string = 'http://localhost:5000';
+  // backendURL: string = 'http://localhost:5000';
+  backendURL: string = 'http://http://128.46.109.133/:5000';
 
   constructor(private mqttService: MqttService, private http:HttpClient) {    
 
