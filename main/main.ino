@@ -157,6 +157,7 @@ void setup()
   void onConnectionEstablished()
   {
     sprintf(commandTopic, "irobot/command/%s", robotID);
+    reportState();
     
 //    subcription to command topic
     client.subscribe(commandTopic, [](const String & payload) {
@@ -299,13 +300,14 @@ void timer0Service(){
 void timer1Service(){
   flagTimer1 = false;
   #ifdef MQTT_ON
-    reportState();
+//    reportState();
   #endif
 }
 
 //---------------------------------------------------------------
 
 void turnHandler(long turning_time, int turning_direction){
+//  Serial.println(turning_time);
   if (turning_direction == LEFT){
     digitalWrite(motor1Pin1, LOW);
     digitalWrite(motor1Pin2, HIGH);
@@ -344,7 +346,8 @@ void turnHandler(long turning_time, int turning_direction){
   digitalWrite(motor1Pin2, LOW);
   digitalWrite(motor2Pin1, LOW);
   digitalWrite(motor2Pin2, HIGH);
-  
+  state = STOP;
+  reportState();
 }
 
 //---------------------------------------------------------------
@@ -379,17 +382,14 @@ void loop()
   else if (state == TURN){
     turnHandler(turningTime, LEFT);
     turnHandler(turningTime, LEFT);
-    state = STOP;
   }
 
   else if (state == LEFT){
     turnHandler(turningTime, LEFT);
-    state = STOP;
   }
 
   else if (state == RIGHT){
     turnHandler(turningTime, RIGHT);
-    state = STOP;
   }
 
   #ifdef DEBUG
