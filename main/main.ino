@@ -1,13 +1,16 @@
 #include <Wire.h>
+#include <HTTPClient.h>
+
 #include "EspMQTTClient.h"
+#include "ArduinoJson.h"
 
 //#define DEBUG
 #define MQTT_ON
 #define TIMER_ON
 //---------------------------------------------------------------
 
-// WiFi and MQTT parameters
-#define robotID "1"
+//WiFi and MQTT parameters
+#define robotID "22"
 #define robot "i-robot"
 #define robotName robot robotID
 #define wifiSSID "i-robot"
@@ -27,8 +30,15 @@
 #endif
 
 //---------------------------------------------------------------
+//HTTP Client 
+#define HTTPURL "http://128.46.109.133:5000"
+HTTPClient http;
+char requestURL[60];
+const int capacity = JSON_OBJECT_SIZE(4)*2;
+
+//---------------------------------------------------------------
 //Global variables
-int leftSpeed, rightSpeed, feedbackErr;
+int leftSpeed, rightSpeed, feedbackErr, drivingTime, turningTime;
 char payload[30];
 char commandTopic[30];
 enum State {STOP, RUN, TURN, LEFT, RIGHT};
@@ -180,6 +190,35 @@ void setup()
 #endif
 
 //---------------------------------------------------------------
+//HTTP Request function
+void getParameters(){
+  sprintf(requestURL, "%s/parameter/%s", HTTPURL, robotID);
+//  Serial.println(requestURL);
+  http.begin(requestURL);
+  int httpCode = http.GET();
+//  Serial.println(httpCode);
+  if(httpCode > 0) {
+//    Serial.println(http.getString());
+    char json[capacity];
+    strcpy(json, http.getString().c_str());
+    StaticJsonDocument<capacity> doc;
+    DeserializationError error = deserializeJson(doc, json);
+    if (error) {
+      Serial.println(error.c_str());
+      return;
+    }
+//    Serial.println(doc["robot_id"].as<char*>());
+//    Serial.println(doc["driving_time"].as<int>());
+//    Serial.println(doc["turning_time"].as<int>());
+    drivingTime = doc["driving_time"].as<int>();
+    turningTime = doc["turning_time"].as<int>();
+  }
+  http.end();
+  
+  
+}
+
+//---------------------------------------------------------------
 //Set lower and upper boundely of parameters
 int cramp(int value, int minimum, int maximum){
   if (value > maximum){
@@ -255,6 +294,7 @@ void timer0Service(){
 
 void timer1Service(){
   flagTimer1 = false;
+  getParameters();
   #ifdef MQTT_ON
     reportState();
   #endif
@@ -325,6 +365,7 @@ void loop()
     rightSpeed = 0;
   }
   else if (state == RUN){
+    readIRData();
     feedbackErr = analyzeIRData();
     leftSpeed = baseSpeed + feedbackErr * KP;
     rightSpeed = baseSpeed - feedbackErr * KP;
@@ -333,18 +374,18 @@ void loop()
   }
 
   else if (state == TURN){
-    turnHandler(1800, LEFT);
-    turnHandler(1800, LEFT);
+    turnHandler(turningTime, LEFT);
+    turnHandler(turningTime, LEFT);
     state = STOP;
   }
 
   else if (state == LEFT){
-    turnHandler(1800, LEFT);
+    turnHandler(turningTime, LEFT);
     state = STOP;
   }
 
   else if (state == RIGHT){
-    turnHandler(1800, RIGHT);
+    turnHandler(turningTime, RIGHT);
     state = STOP;
   }
 
