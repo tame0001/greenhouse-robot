@@ -101,6 +101,8 @@ void setup()
 {
   Wire.begin();
   Serial.begin(115200);
+
+  getParameters();
   
   #ifdef MQTT_ON
     client.enableDebuggingMessages();
