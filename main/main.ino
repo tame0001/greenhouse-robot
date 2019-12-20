@@ -10,7 +10,7 @@
 //---------------------------------------------------------------
 
 //WiFi and MQTT parameters
-#define robotID "22"
+#define robotID "1"
 #define robot "i-robot"
 #define robotName robot robotID
 #define wifiSSID "i-robot"
@@ -184,6 +184,10 @@ void setup()
         state = RIGHT;
       }
       
+      else if (payload == "u"){
+        getParameters();
+      }
+      
       reportState();
     }); 
   }
@@ -294,7 +298,6 @@ void timer0Service(){
 
 void timer1Service(){
   flagTimer1 = false;
-  getParameters();
   #ifdef MQTT_ON
     reportState();
   #endif
