@@ -121,6 +121,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
           console.log(error);
         }
       );
+      this.unsafePublish(this.conmmandTopic, 'u');
   }
 
   ngOnInit() {
