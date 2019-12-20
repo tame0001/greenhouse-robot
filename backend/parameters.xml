@@ -1,0 +1,100 @@
+<parameters>
+
+    <robot id="1">
+        <driving_time>5</driving_time>
+        <turning_time>5</turning_time>
+    </robot>
+    <robot id="2">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="3">
+        <driving_time>10</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="4">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="5">
+        <driving_time>5</driving_time>
+        <turning_time>15</turning_time>
+    </robot>
+    <robot id="6">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="7">
+        <driving_time>10</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="8">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="9">
+        <driving_time>10</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="10">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="11">
+        <driving_time>10</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="12">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="13">
+        <driving_time>10</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="14">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="15">
+        <driving_time>10</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="16">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="17">
+        <driving_time>10</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="18">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="19">
+        <driving_time>10</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="20">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="21">
+        <driving_time>10</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="22">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="23">
+        <driving_time>10</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    <robot id="24">
+        <driving_time>40</driving_time>
+        <turning_time>20</turning_time>
+    </robot>
+    
+</parameters>

@@ -1,0 +1,11 @@
+<!-- <p>line-sensor works!</p> -->
+<p> Robot ID = {{ robotID }} </p>
+<p> Left Speed = {{ letfSpeed }} % </p>
+<p> Right Speed = {{ rightSpeed }} % </p>
+<button (click)="sendRun()"> Run </button>
+<button (click)="sendStop()"> Stop </button>
+<button (click)="sendPing()"> Ping </button>
+<p> Current Status = {{ currentStatus }} </p> 
+<button (click)="sendLeft()"> Left </button>
+<button (click)="sendTurn()"> 180 </button>
+<button (click)="sendRight()"> Right </button>
