@@ -101,8 +101,6 @@ void setup()
 {
   Wire.begin();
   Serial.begin(115200);
-
-  getParameters();
   
   #ifdef MQTT_ON
     client.enableDebuggingMessages();
@@ -139,6 +137,7 @@ void setup()
   ledcSetup(pwmChannelB, freq, resolution);
   ledcAttachPin(enA, pwmChannelA);
   ledcAttachPin(enB, pwmChannelB);
+
 }
 
 //---------------------------------------------------------------
@@ -160,6 +159,7 @@ void setup()
   {
     sprintf(commandTopic, "irobot/command/%s", robotID);
     reportState();
+    getParameters();
     
 //    subcription to command topic
     client.subscribe(commandTopic, [](const String & payload) {
