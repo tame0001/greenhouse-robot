@@ -10,7 +10,7 @@
 //---------------------------------------------------------------
 
 //WiFi and MQTT parameters
-#define robotID "1"
+#define robotID "2"
 #define robot "i-robot"
 #define robotName robot robotID
 #define wifiSSID "i-robot"
@@ -19,22 +19,22 @@
 #define brokerPort 1883
 
 #ifdef MQTT_ON
-  // create MQTT client
-  EspMQTTClient client(
-    wifiSSID,
-    wifiPassword,
-    brokerIP,   
-    robotName,
-    brokerPort              
-  );
+// create MQTT client
+EspMQTTClient client(
+  wifiSSID,
+  wifiPassword,
+  brokerIP,
+  robotName,
+  brokerPort
+);
 #endif
 
 //---------------------------------------------------------------
-//HTTP Client 
+//HTTP Client
 #define HTTPURL "http://128.46.109.133:5000"
 HTTPClient http;
 char requestURL[60];
-const int capacity = JSON_OBJECT_SIZE(4)*2;
+const int capacity = JSON_OBJECT_SIZE(4) * 2;
 
 //---------------------------------------------------------------
 //Global variables
@@ -47,28 +47,28 @@ State state = STOP;
 //---------------------------------------------------------------
 //Timers
 #ifdef TIMER_ON
-  bool flagTimer0, flagTimer1;
-  hw_timer_t* timer0 = NULL;
-  hw_timer_t* timer1 = NULL;
-  portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
-  
-  void IRAM_ATTR onTimer0(){
-    portENTER_CRITICAL_ISR(&timerMux);
-    #ifdef DEBUG
-      Serial.println("Timer0 is overflow");
-    #endif
-    flagTimer0 = true;
-    portEXIT_CRITICAL_ISR(&timerMux);
-  }
+bool flagTimer0, flagTimer1;
+hw_timer_t* timer0 = NULL;
+hw_timer_t* timer1 = NULL;
+portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
-  void IRAM_ATTR onTimer1(){
-    portENTER_CRITICAL_ISR(&timerMux);
-    #ifdef DEBUG
-      Serial.println("Timer1 is overflow");
-    #endif
-    flagTimer1 = true;
-    portEXIT_CRITICAL_ISR(&timerMux);
-  }
+void IRAM_ATTR onTimer0() {
+  portENTER_CRITICAL_ISR(&timerMux);
+#ifdef DEBUG
+  Serial.println("Timer0 is overflow");
+#endif
+  flagTimer0 = true;
+  portEXIT_CRITICAL_ISR(&timerMux);
+}
+
+void IRAM_ATTR onTimer1() {
+  portENTER_CRITICAL_ISR(&timerMux);
+#ifdef DEBUG
+  Serial.println("Timer1 is overflow");
+#endif
+  flagTimer1 = true;
+  portEXIT_CRITICAL_ISR(&timerMux);
+}
 #endif
 
 //---------------------------------------------------------------
@@ -101,30 +101,30 @@ void setup()
 {
   Wire.begin();
   Serial.begin(115200);
-  
-  #ifdef MQTT_ON
-    client.enableDebuggingMessages();
-  #endif
-  
-//  ---------------------------------------------------------------
-//  Initiate timers
-  #ifdef TIMER_ON
-  
-//    timer0 setup 1 second
-    timer0 = timerBegin(0, 80, true);
-    timerAttachInterrupt(timer0, &onTimer0, true);
-    timerAlarmWrite(timer0, 1000000, true);
-    timerAlarmEnable(timer0);
-    
-//    timer1 setup 5 seconds
-    timer1 = timerBegin(1, 400, true);
-    timerAttachInterrupt(timer1, &onTimer1, true);
-    timerAlarmWrite(timer1, 1000000, true);
-    timerAlarmEnable(timer1);
-  #endif
-  
-//  ---------------------------------------------------------------
-//  Pin setup
+
+#ifdef MQTT_ON
+  client.enableDebuggingMessages();
+#endif
+
+  //  ---------------------------------------------------------------
+  //  Initiate timers
+#ifdef TIMER_ON
+
+  //    timer0 setup 1 second
+  timer0 = timerBegin(0, 80, true);
+  timerAttachInterrupt(timer0, &onTimer0, true);
+  timerAlarmWrite(timer0, 1000000, true);
+  timerAlarmEnable(timer0);
+
+  //    timer1 setup 5 seconds
+  timer1 = timerBegin(1, 400, true);
+  timerAttachInterrupt(timer1, &onTimer1, true);
+  timerAlarmWrite(timer1, 1000000, true);
+  timerAlarmEnable(timer1);
+#endif
+
+  //  ---------------------------------------------------------------
+  //  Pin setup
   pinMode(motor1Pin1, OUTPUT);
   pinMode(motor1Pin2, OUTPUT);
   pinMode(motor2Pin1, OUTPUT);
@@ -141,270 +141,27 @@ void setup()
 }
 
 //---------------------------------------------------------------
-#ifdef MQTT_ON
-//  Report robot current state of operation
-  void reportState(){
-    sprintf(payload, "%s:%d", robotID, state);
-    client.publish("irobot/feedback", payload); 
-  }
-  
-//  Report current operation parameters
-  void reportParameters(int left, int right){
-    sprintf(payload, "%s:%d:%d", robotID, left, right);
-    client.publish("irobot/parameters", payload); 
-  }
-  
-//   MQTT Callback when connection is established
-  void onConnectionEstablished()
-  {
-    sprintf(commandTopic, "irobot/command/%s", robotID);
-    reportState();
-    getParameters();
-    
-//    subcription to command topic
-    client.subscribe(commandTopic, [](const String & payload) {
-      #ifdef DEBUG
-        Serial.print("Recieve message: ");
-        Serial.println(payload);
-      #endif
-
-      if (payload == "s"){
-        state = STOP;
-      }
-      else if (payload == "w"){
-        state = RUN;
-      }
-
-      else if (payload == "r"){
-        state = FORWARD;
-      }
-
-      else if (payload == "q"){
-        state = LEFT;
-      }
-
-      else if (payload == "e"){
-        state = RIGHT;
-      }
-      
-      else if (payload == "u"){
-        getParameters();
-      }
-      
-      reportState();
-    }); 
-  }
-#endif
-
-//---------------------------------------------------------------
-//HTTP Request function
-void getParameters(){
-  sprintf(requestURL, "%s/parameter/%s", HTTPURL, robotID);
-//  Serial.println(requestURL);
-  http.begin(requestURL);
-  int httpCode = http.GET();
-//  Serial.println(httpCode);
-  if(httpCode > 0) {
-//    Serial.println(http.getString());
-    char json[capacity];
-    strcpy(json, http.getString().c_str());
-    StaticJsonDocument<capacity> doc;
-    DeserializationError error = deserializeJson(doc, json);
-    if (error) {
-      Serial.println(error.c_str());
-      return;
-    }
-//    Serial.println(doc["robot_id"].as<char*>());
-//    Serial.println(doc["driving_time"].as<int>());
-//    Serial.println(doc["turning_time"].as<int>());
-    drivingTime = doc["driving_time"].as<int>();
-    turningTime = doc["turning_time"].as<int>();
-  }
-  http.end();
-  
-  
-}
-
-//---------------------------------------------------------------
-//Set lower and upper boundely of parameters
-int cramp(int value, int minimum, int maximum){
-  if (value > maximum){
-    return maximum;
-  }
-  else if(value < minimum){
-    return minimum;
-  }
-  else{
-    return value;
-  }
-}
-
-//Read value from line IR sensor
-void readIRData(){
-  unsigned char t;
-
-  Wire.requestFrom(9, 16);
-  Serial.println("Reading Line Sensor");
-  while (Wire.available())   
-  {
-    lineData[t] = Wire.read(); 
-    if (t < 15)
-      t++;
-    else
-      t = 0;
-  }
-}
-
-//Process raw value from line IR sensor
-int analyzeIRData(){
-  int sum = 0;
-  for (int i=0; i<16; i+=2){
-    if (lineData[i] > theshore){
-      if (i < 8){
-        sum++;
-      }
-      else{
-        sum--;
-      }
-    }
-  }
-  return sum;
-}
-
-//Print raw line IR sensor values
-void printIRDataRaw(){
-  Serial.print("lineData[0]:");
-  Serial.println(lineData[0]);
-  Serial.print("lineData[2]:");
-  Serial.println(lineData[2]);
-  Serial.print("lineData[4]:");
-  Serial.println(lineData[4]);
-  Serial.print("lineData[6]:");
-  Serial.println(lineData[6]);
-  Serial.print("lineData[8]:");
-  Serial.println(lineData[8]);
-  Serial.print("lineData[10]:");
-  Serial.println(lineData[10]);
-  Serial.print("lineData[12]:");
-  Serial.println(lineData[12]);
-  Serial.print("lineData[14]:");
-  Serial.println(lineData[14]);
-}
-//---------------------------------------------------------------
-
-void timer0Service(){
-  flagTimer0 = false;
-  #ifdef MQTT_ON
-    reportParameters(leftSpeed, rightSpeed);
-  #endif
-}
-
-void timer1Service(){
-  flagTimer1 = false;
-  #ifdef MQTT_ON
-//    reportState();
-  #endif
-}
-
-//---------------------------------------------------------------
-
-void turnHandler(long turning_time, int turning_direction){
-//  Serial.println(turning_time);
-  if (turning_direction == LEFT){
-    digitalWrite(motor1Pin1, LOW);
-    digitalWrite(motor1Pin2, HIGH);
-    digitalWrite(motor2Pin1, LOW);
-    digitalWrite(motor2Pin2, HIGH);
-  }
-  else if (turning_direction == RIGHT){
-    digitalWrite(motor1Pin1, HIGH);
-    digitalWrite(motor1Pin2, LOW);
-    digitalWrite(motor2Pin1, HIGH);
-    digitalWrite(motor2Pin2, LOW);
-  }
-  
-  leftSpeed = baseSpeed;
-  rightSpeed = baseSpeed;
-  leftSpeed = cramp(leftSpeed, 0, 100);
-  rightSpeed = cramp(rightSpeed, 0, 100);
-  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
-  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
-  ledcWrite(pwmChannelB, leftSpeed);
-  ledcWrite(pwmChannelA, rightSpeed);
-
-  long start_time = millis();
-  while(millis() - start_time < turning_time){
-    
-  }
-  leftSpeed = 0;
-  rightSpeed = 0;
-  leftSpeed = cramp(leftSpeed, 0, 100);
-  rightSpeed = cramp(rightSpeed, 0, 100);
-  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
-  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
-  ledcWrite(pwmChannelB, leftSpeed);
-  ledcWrite(pwmChannelA, rightSpeed);
-  digitalWrite(motor1Pin1, HIGH);
-  digitalWrite(motor1Pin2, LOW);
-  digitalWrite(motor2Pin1, LOW);
-  digitalWrite(motor2Pin2, HIGH);
-  state = STOP;
-  reportState();
-}
-
-//---------------------------------------------------------------
-
-void forwardHandler(long driving_time){
-//  Serial.println(driving_time);
-
-  leftSpeed = baseSpeed;
-  rightSpeed = baseSpeed;
-  leftSpeed = cramp(leftSpeed, 0, 100);
-  rightSpeed = cramp(rightSpeed, 0, 100);
-  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
-  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
-  ledcWrite(pwmChannelB, leftSpeed);
-  ledcWrite(pwmChannelA, rightSpeed);
-
-  long start_time = millis();
-  while(millis() - start_time < driving_time){
-    
-  }
-  
-  leftSpeed = 0;
-  rightSpeed = 0;
-  leftSpeed = cramp(leftSpeed, 0, 100);
-  rightSpeed = cramp(rightSpeed, 0, 100);
-  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
-  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
-  ledcWrite(pwmChannelB, leftSpeed);
-  ledcWrite(pwmChannelA, rightSpeed);
-  state = STOP;
-  reportState();
-}
-
-//---------------------------------------------------------------
 
 void loop()
-{ 
-  #ifdef DEBUG
-    delay(1000);
-    Serial.println("----------------------------------------");
-    readIRData();
-    printIRDataRaw(); 
-    Serial.print("IR Data: ");
-    Serial.println(analyzeIRData());
-  #endif
+{
+#ifdef DEBUG
+  delay(1000);
+  Serial.println("----------------------------------------");
+  readIRData();
+  printIRDataRaw();
+  Serial.print("IR Data: ");
+  Serial.println(analyzeIRData());
+#endif
 
-  #ifdef MQTT_ON
-    client.loop();
-  #endif
-  
-  if (state == STOP){
+#ifdef MQTT_ON
+  client.loop();
+#endif
+
+  if (state == STOP) {
     leftSpeed = 0;
     rightSpeed = 0;
   }
-  else if (state == RUN){
+  else if (state == RUN) {
     readIRData();
     feedbackErr = analyzeIRData();
     leftSpeed = baseSpeed + feedbackErr * KP;
@@ -413,37 +170,37 @@ void loop()
     rightSpeed = cramp(rightSpeed, 0, 100);
   }
 
-  else if (state == FORWARD){
+  else if (state == FORWARD) {
     forwardHandler(drivingTime);
   }
 
-  else if (state == LEFT){
+  else if (state == LEFT) {
     turnHandler(turningTime, LEFT);
   }
 
-  else if (state == RIGHT){
+  else if (state == RIGHT) {
     turnHandler(turningTime, RIGHT);
   }
 
-  #ifdef DEBUG
-    Serial.print("leftSpeed: ");
-    Serial.println(leftSpeed);
-    Serial.print("rightSpeed: ");
-    Serial.println(rightSpeed);
-  #endif
+#ifdef DEBUG
+  Serial.print("leftSpeed: ");
+  Serial.println(leftSpeed);
+  Serial.print("rightSpeed: ");
+  Serial.println(rightSpeed);
+#endif
 
-  if (flagTimer0){
+  if (flagTimer0) {
     timer0Service();
   }
 
-  if (flagTimer1){
+  if (flagTimer1) {
     timer1Service();
   }
-  
+
   leftSpeed = map(leftSpeed, 0, 100, 0, 255);
   rightSpeed = map(rightSpeed, 0, 100, 0, 255);
   ledcWrite(pwmChannelB, leftSpeed);
   ledcWrite(pwmChannelA, rightSpeed);
 
-  
+
 }
