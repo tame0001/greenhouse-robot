@@ -58,7 +58,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
                 this.currentStatus = 'RUNNING';
                 break;
               case '2':
-                this.currentStatus = 'TURNING 180';
+                this.currentStatus = 'FORWARDING';
                 break;
               case '3':
                 this.currentStatus = 'TURNING LEFT';
@@ -95,7 +95,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
     this.unsafePublish(this.conmmandTopic, 'e');
   }
 
-  sendTurn() {
+  sendForward() {
     this.unsafePublish(this.conmmandTopic, 'r');
   }
 
