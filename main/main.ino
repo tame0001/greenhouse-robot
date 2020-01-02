@@ -41,7 +41,7 @@ const int capacity = JSON_OBJECT_SIZE(4)*2;
 int leftSpeed, rightSpeed, feedbackErr, drivingTime, turningTime;
 char payload[30];
 char commandTopic[30];
-enum State {STOP, RUN, TURN, LEFT, RIGHT};
+enum State {STOP, RUN, FORWARD, LEFT, RIGHT};
 State state = STOP;
 
 //---------------------------------------------------------------
@@ -176,7 +176,7 @@ void setup()
       }
 
       else if (payload == "r"){
-        state = TURN;
+        state = FORWARD;
       }
 
       else if (payload == "q"){
@@ -353,6 +353,38 @@ void turnHandler(long turning_time, int turning_direction){
 }
 
 //---------------------------------------------------------------
+
+void forwardHandler(long driving_time){
+//  Serial.println(driving_time);
+
+  leftSpeed = baseSpeed;
+  rightSpeed = baseSpeed;
+  leftSpeed = cramp(leftSpeed, 0, 100);
+  rightSpeed = cramp(rightSpeed, 0, 100);
+  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
+  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
+  ledcWrite(pwmChannelB, leftSpeed);
+  ledcWrite(pwmChannelA, rightSpeed);
+
+  long start_time = millis();
+  while(millis() - start_time < driving_time){
+    
+  }
+  
+  leftSpeed = 0;
+  rightSpeed = 0;
+  leftSpeed = cramp(leftSpeed, 0, 100);
+  rightSpeed = cramp(rightSpeed, 0, 100);
+  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
+  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
+  ledcWrite(pwmChannelB, leftSpeed);
+  ledcWrite(pwmChannelA, rightSpeed);
+  state = STOP;
+  reportState();
+}
+
+//---------------------------------------------------------------
+
 void loop()
 { 
   #ifdef DEBUG
@@ -381,9 +413,8 @@ void loop()
     rightSpeed = cramp(rightSpeed, 0, 100);
   }
 
-  else if (state == TURN){
-    turnHandler(turningTime, LEFT);
-    turnHandler(turningTime, LEFT);
+  else if (state == FORWARD){
+    forwardHandler(drivingTime);
   }
 
   else if (state == LEFT){
