@@ -2,7 +2,7 @@
 
 void timer0Service() {
   flagTimer0 = false;
-
+  
 #ifdef MQTT_ON
   reportParameters(leftSpeed, rightSpeed);
 #endif

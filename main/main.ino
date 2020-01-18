@@ -149,13 +149,6 @@ void setup()
 void loop()
 {
 
-#ifdef DEBUG
-  delay(500);
-  Serial.println("----------------------------------------");
-  Serial.print("IR Data: ");
-  Serial.println(analyzeIRData());
-#endif
-
 #ifdef MQTT_ON
   client.loop();
 #endif

@@ -66,17 +66,15 @@ void reportLineSensor() {
 //Process raw value from line IR sensor
 int analyzeIRData() {
   int sum = 0;
-  for (int i = 0; i < 16; i += 2) {
-    if (lineData[i] > theshore) {
-      if (i < 8) {
-        sum++;
-      }
-      else {
-        sum--;
-      }
-    }
+  
+  for (int i = 0; i < 4; i++) {
+    sum += int(line[i]);
   }
-  return sum;
+
+  for (int i = 4; i < 8; i++) {
+    sum -= int(line[i]);
+  }
+  return sum;    
 }
 
 
