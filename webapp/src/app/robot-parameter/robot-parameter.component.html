@@ -28,7 +28,7 @@
             <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendRight()">Right</button>
         </div>        
     </div>
-    <div class="row m-1">
+    <div class="row m-1" *ngIf="showConfigureBool">
         <div class="row">
             <div class="col">Driving</div> 
             <div class="col">
@@ -41,7 +41,7 @@
             </div>
         </div>
     </div>
-    <div class="row m-1">
+    <div class="row m-1" *ngIf="showConfigureBool">
         <div class="row">
             <div class="col">Turning</div> 
             <div class="col">
@@ -54,12 +54,22 @@
             </div>
         </div>
     </div>
-    <div class="row m-1">
+    <div class="row m-1" *ngIf="showConfigureBool">
         <div class="col">
             <button type="button" class="btn btn-warning btn-sm" (click)="updateParameters()">Update</button>
         </div>
         <div class="col">
             <button type="button" class="btn btn-info btn-sm" (click)="getParameters()">Reset</button>
+        </div>
+    </div>
+    <div class="row m-1" *ngIf="!showConfigureBool">
+        <div class="col">
+            <button type="button" class="btn btn-warning btn-sm" (click)="showConfigure()">Show Configure</button>
+        </div>
+    </div>
+    <div class="row m-1" *ngIf="showConfigureBool">
+        <div class="col">
+            <button type="button" class="btn btn-warning btn-sm" (click)="hideConfigure()">Hide Configure</button>
         </div>
     </div>
     

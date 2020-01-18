@@ -24,6 +24,8 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   turningTime: string;
   conmmandTopic: string;
 
+
+  showConfigureBool: boolean = false;
   currentStatus: string = 'OFFLINE';
   // backendURL: string = 'http://localhost:5000';
   backendURL: string = 'http://128.46.109.133:5000';
@@ -105,6 +107,14 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
       this.drivingTime = data.driving_time;
       this.turningTime = data.turning_time;
     });
+  }
+
+  showConfigure() {
+    this.showConfigureBool = true;
+  }
+
+  hideConfigure() {
+    this.showConfigureBool = false;
   }
 
   updateParameters() {
