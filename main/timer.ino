@@ -2,7 +2,6 @@
 
 void timer0Service() {
   flagTimer0 = false;
-  Serial.println(line);
 
 #ifdef MQTT_ON
   reportParameters(leftSpeed, rightSpeed);
@@ -14,7 +13,7 @@ void timer1Service() {
   readIRData();
 
 #ifdef MQTT_ON
-  //    reportState();
+      reportLineSensor();
 #endif
 }
 

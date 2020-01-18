@@ -51,9 +51,16 @@ void readIRData() {
       result.concat("0");
     }
   }
+#ifdef DEBUG
   Serial.println(result);
+#endif
 
   result.toCharArray(line, 9);
+}
+
+void reportLineSensor() {
+  sprintf(payload, "%s:%s", robotID, line);
+  client.publish("irobot/linesensor", payload);
 }
 
 //Process raw value from line IR sensor

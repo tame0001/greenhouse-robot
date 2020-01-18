@@ -140,6 +140,8 @@ void setup()
   ledcAttachPin(enA, pwmChannelA);
   ledcAttachPin(enB, pwmChannelB);
 
+  reportState();
+
 }
 
 //---------------------------------------------------------------
