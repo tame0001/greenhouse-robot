@@ -8,6 +8,7 @@
         <div class="col">Speed</div>
         <div class="col border"> {{rightSpeed }}%</div>
     </div>
+    <app-line-sensor [robotID] = robotID></app-line-sensor>
     <div class="row m-1">
         <div class="col-sm-6">
             <button type="button" class="btn btn-success" (click)="sendRun()">Run</button>
@@ -61,4 +62,5 @@
             <button type="button" class="btn btn-info btn-sm" (click)="getParameters()">Reset</button>
         </div>
     </div>
+    
 </div>
