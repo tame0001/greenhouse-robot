@@ -7,10 +7,11 @@
 //#define DEBUG
 #define MQTT_ON
 #define TIMER_ON
+
 //---------------------------------------------------------------
 
 //WiFi and MQTT parameters
-#define robotID "2"
+#define robotID "1"
 #define robot "i-robot"
 #define robotName robot robotID
 #define wifiSSID "i-robot"
@@ -95,7 +96,8 @@ const int KP = 10;
 
 //Line follower parameters
 unsigned char lineData[16];
-int theshore = 200;
+const int theshore = 200;
+char line[8]; 
 //---------------------------------------------------------------
 void setup()
 {
@@ -116,10 +118,10 @@ void setup()
   timerAlarmWrite(timer0, 1000000, true);
   timerAlarmEnable(timer0);
 
-  //    timer1 setup 5 seconds
+  //    timer1 setup 0.5 seconds
   timer1 = timerBegin(1, 400, true);
   timerAttachInterrupt(timer1, &onTimer1, true);
-  timerAlarmWrite(timer1, 1000000, true);
+  timerAlarmWrite(timer1, 100000, true);
   timerAlarmEnable(timer1);
 #endif
 
@@ -144,11 +146,10 @@ void setup()
 
 void loop()
 {
+
 #ifdef DEBUG
-  delay(1000);
+  delay(500);
   Serial.println("----------------------------------------");
-  readIRData();
-  printIRDataRaw();
   Serial.print("IR Data: ");
   Serial.println(analyzeIRData());
 #endif
@@ -189,6 +190,7 @@ void loop()
   Serial.println(rightSpeed);
 #endif
 
+#ifdef TIMER_ON
   if (flagTimer0) {
     timer0Service();
   }
@@ -196,6 +198,7 @@ void loop()
   if (flagTimer1) {
     timer1Service();
   }
+#endif
 
   leftSpeed = map(leftSpeed, 0, 100, 0, 255);
   rightSpeed = map(rightSpeed, 0, 100, 0, 255);
