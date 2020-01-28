@@ -48,7 +48,7 @@ State state = STOP;
 //---------------------------------------------------------------
 //Timers
 #ifdef TIMER_ON
-bool flagTimer0, flagTimer1;
+bool flagTimer0, flagTimer1, lineFlag;
 hw_timer_t* timer0 = NULL;
 hw_timer_t* timer1 = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
@@ -68,6 +68,7 @@ void IRAM_ATTR onTimer1() {
   Serial.println("Timer1 is overflow");
 #endif
   flagTimer1 = true;
+  lineFlag = true;
   portEXIT_CRITICAL_ISR(&timerMux);
 }
 #endif
@@ -97,7 +98,7 @@ const int KP = 10;
 //Line follower parameters
 unsigned char lineData[16];
 const int theshore = 200;
-char line[8]; 
+char line[8];
 //---------------------------------------------------------------
 void setup()
 {
@@ -118,10 +119,10 @@ void setup()
   timerAlarmWrite(timer0, 1000000, true);
   timerAlarmEnable(timer0);
 
-  //    timer1 setup 0.5 seconds
+  //    timer1 setup 5 milliseconds
   timer1 = timerBegin(1, 400, true);
   timerAttachInterrupt(timer1, &onTimer1, true);
-  timerAlarmWrite(timer1, 100000, true);
+  timerAlarmWrite(timer1, 1000, true);
   timerAlarmEnable(timer1);
 #endif
 
@@ -139,9 +140,6 @@ void setup()
   ledcSetup(pwmChannelB, freq, resolution);
   ledcAttachPin(enA, pwmChannelA);
   ledcAttachPin(enB, pwmChannelB);
-
-  reportState();
-
 }
 
 //---------------------------------------------------------------
@@ -158,16 +156,14 @@ void loop()
     rightSpeed = 0;
   }
   else if (state == RUN) {
-    readIRData();
-    feedbackErr = analyzeIRData();
-    leftSpeed = baseSpeed + feedbackErr * KP;
-    rightSpeed = baseSpeed - feedbackErr * KP;
-    leftSpeed = cramp(leftSpeed, 0, 100);
-    rightSpeed = cramp(rightSpeed, 0, 100);
+    speedAdjust();
   }
 
   else if (state == FORWARD) {
-    forwardHandler(drivingTime);
+    if (line[0] == '0' && line[7] == '0') {
+      forwardHandler(drivingTime);
+    }
+    checkCrossHander();
   }
 
   else if (state == LEFT) {
@@ -195,10 +191,6 @@ void loop()
   }
 #endif
 
-  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
-  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
-  ledcWrite(pwmChannelB, leftSpeed);
-  ledcWrite(pwmChannelA, rightSpeed);
-
+  motorExecute();
 
 }

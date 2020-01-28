@@ -86,3 +86,12 @@ int cramp(int value, int minimum, int maximum) {
     return value;
   }
 }
+
+void motorExecute() {
+
+  leftSpeed = map(leftSpeed, 0, 100, 0, 255);
+  rightSpeed = map(rightSpeed, 0, 100, 0, 255);
+  ledcWrite(pwmChannelB, leftSpeed);
+  ledcWrite(pwmChannelA, rightSpeed);
+}
+
