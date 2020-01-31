@@ -12,10 +12,6 @@ void speedAdjust() {
 void checkCrossHander() {
   speedAdjust();
 
-  sprintf(payload, "%s:%s", robotID, line);
-  client.publish("irobot/debug", payload);
-
-
   if (line[0] == '0' && line[7] == '0') {
     state = STOP;
     reportState();

@@ -119,10 +119,10 @@ void setup()
   timerAlarmWrite(timer0, 1000000, true);
   timerAlarmEnable(timer0);
 
-  //    timer1 setup 5 milliseconds
-  timer1 = timerBegin(1, 400, true);
+  //    timer1 setup 10 milliseconds
+  timer1 = timerBegin(1, 80, true);
   timerAttachInterrupt(timer1, &onTimer1, true);
-  timerAlarmWrite(timer1, 1000, true);
+  timerAlarmWrite(timer1, 10000, true);
   timerAlarmEnable(timer1);
 #endif
 
@@ -160,8 +160,11 @@ void loop()
   }
 
   else if (state == FORWARD) {
+
     if (line[0] == '0' && line[7] == '0') {
       forwardHandler(drivingTime);
+      readIRData();
+      state = FORWARD;
     }
     checkCrossHander();
   }
