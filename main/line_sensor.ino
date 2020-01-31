@@ -1,7 +1,5 @@
 void readIRData() {
 
-  Serial.println(lineFlag);
-
   if (lineFlag) {
     
     lineFlag = false;

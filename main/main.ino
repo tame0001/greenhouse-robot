@@ -119,10 +119,10 @@ void setup()
   timerAlarmWrite(timer0, 1000000, true);
   timerAlarmEnable(timer0);
 
-  //    timer1 setup 10 milliseconds
+  //    timer1 setup 2 milliseconds
   timer1 = timerBegin(1, 80, true);
   timerAttachInterrupt(timer1, &onTimer1, true);
-  timerAlarmWrite(timer1, 10000, true);
+  timerAlarmWrite(timer1, 2000, true);
   timerAlarmEnable(timer1);
 #endif
 
@@ -163,18 +163,48 @@ void loop()
 
     if (line[0] == '0' && line[7] == '0') {
       forwardHandler(drivingTime);
-      readIRData();
       state = FORWARD;
+      readIRData();
+#ifdef DEBUG
+      sprintf(payload, "%s:%s exit cross", robotID, line);
+      client.publish("irobot/debug", payload);
+#endif
     }
-    checkCrossHander();
+    else {
+      checkCrossHandler();
+    }
   }
 
   else if (state == LEFT) {
-    turnHandler(turningTime, LEFT);
+    if (line[0] == '0' && line[7] == '0') {
+      forwardHandler(drivingTime);
+      turnHandler(turningTime, LEFT);
+      state = LEFT;
+      readIRData();
+#ifdef DEBUG
+      sprintf(payload, "%s:%s ready to turn", robotID, line);
+      client.publish("irobot/debug", payload);
+#endif
+    }
+    else {
+      checkCenterHandler();
+    }
   }
 
   else if (state == RIGHT) {
-    turnHandler(turningTime, RIGHT);
+    if (line[0] == '0' && line[7] == '0') {
+      forwardHandler(drivingTime);
+      turnHandler(turningTime, RIGHT);
+      state = RIGHT;
+      readIRData();
+#ifdef DEBUG
+      sprintf(payload, "%s:%s ready to turn", robotID, line);
+      client.publish("irobot/debug", payload);
+#endif
+    }
+    else {
+      checkCenterHandler();
+    }
   }
 
 #ifdef DEBUG
