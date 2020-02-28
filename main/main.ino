@@ -92,12 +92,12 @@ const char resolution = 8;
 
 //---------------------------------------------------------------
 //Movement parameters
-const int baseSpeed = 80;
-const int KP = 10;
+const int baseSpeed = 70;
+const int KP = 5;
 
 //Line follower parameters
 unsigned char lineData[16];
-const int theshore = 200;
+const int theshore = 150;
 char line[8];
 //---------------------------------------------------------------
 void setup()
