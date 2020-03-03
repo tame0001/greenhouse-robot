@@ -141,7 +141,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   }
 
   public unsafePublish(topic: string, message: string): void {
-    this.mqttService.unsafePublish(topic, message, {qos: 1, retain: false});
+    this.mqttService.unsafePublish(topic, message, {qos: 1, retain: true});
   }
 
   public ngOnDestroy() {
