@@ -179,8 +179,7 @@ void loop()
 #endif
     }
     if (forward_step == FINDCROSS) {
-      state = STOP;
-//      checkCrossHandler();
+      checkCrossHandler();
     }
   }
 
