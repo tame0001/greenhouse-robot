@@ -6,6 +6,7 @@ void readIRData() {
     
     unsigned char t;
     String result;
+    Serial.println("Reading Line Sensor");
 #ifdef DEBUG
     Serial.println("Reading Line Sensor");
 #endif
@@ -58,6 +59,7 @@ void readIRData() {
 #ifdef DEBUG
     Serial.println(result);
 #endif
+    Serial.println(result);
 
     result.toCharArray(line, 9);
 
@@ -82,5 +84,3 @@ int analyzeIRData() {
   }
   return sum;
 }
-
-

@@ -75,6 +75,16 @@ void forwardHandler(long driving_time) {
 
 //---------------------------------------------------------------
 
+void move_forward() {
+
+  leftSpeed = baseSpeed;
+  rightSpeed = baseSpeed;
+  leftSpeed = cramp(leftSpeed, 0, 100);
+  rightSpeed = cramp(rightSpeed, 0, 100);
+}
+
+//---------------------------------------------------------------
+
 int cramp(int value, int minimum, int maximum) {
   if (value > maximum) {
     return maximum;
@@ -94,4 +104,3 @@ void motorExecute() {
   ledcWrite(pwmChannelB, leftSpeed);
   ledcWrite(pwmChannelA, rightSpeed);
 }
-

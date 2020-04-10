@@ -42,8 +42,10 @@ const int capacity = JSON_OBJECT_SIZE(4) * 2;
 int leftSpeed, rightSpeed, feedbackErr, drivingTime, turningTime;
 char payload[30];
 char commandTopic[30];
-enum State {STOP, RUN, FORWARD, LEFT, RIGHT};
-State state = STOP;
+enum State {STOP, RUN, FORWARD, LEFT, RIGHT, UTURN, NONE};
+State state = NONE;
+enum ForwatdStep {DEPART, FINDCROSS};
+ForwatdStep forward_step = DEPART;
 
 //---------------------------------------------------------------
 //Timers
@@ -119,10 +121,10 @@ void setup()
   timerAlarmWrite(timer0, 1000000, true);
   timerAlarmEnable(timer0);
 
-  //    timer1 setup 2 milliseconds
+  //    timer1 setup 10 milliseconds
   timer1 = timerBegin(1, 80, true);
   timerAttachInterrupt(timer1, &onTimer1, true);
-  timerAlarmWrite(timer1, 2000, true);
+  timerAlarmWrite(timer1, 10000, true);
   timerAlarmEnable(timer1);
 #endif
 
@@ -160,18 +162,25 @@ void loop()
   }
 
   else if (state == FORWARD) {
-
+  
     if (line[0] == '0' && line[7] == '0') {
-      forwardHandler(drivingTime);
-      state = FORWARD;
+      forward_step = DEPART;
+    }
+    else {
+      forward_step = FINDCROSS;
+    }
+
+    if (forward_step == DEPART) {
+      move_forward();
       readIRData();
 #ifdef DEBUG
       sprintf(payload, "%s:%s exit cross", robotID, line);
       client.publish("irobot/debug", payload);
 #endif
     }
-    else {
-      checkCrossHandler();
+    if (forward_step == FINDCROSS) {
+      state = STOP;
+//      checkCrossHandler();
     }
   }
 
