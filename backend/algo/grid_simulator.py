@@ -1,5 +1,5 @@
 import random
-from path_planning import gen_movement_cmd
+from path_planning import gen_movement_cmd, list_obstacle
 
 def random_coordinate():
     x_pos = random.randint(1, number_rows-2)
@@ -85,13 +85,21 @@ while True:
     print('Move robot id {} from {} to {}'.format(rio, current_position, target_position))
     print('The current direction is {}'.format(current_direction))
     print('Following is the command for robot id {}'.format(rio))
-    current_direction = gen_movement_cmd(current_position, target_position, current_direction)
+    commands, current_direction = gen_movement_cmd(current_position, target_position, current_direction)
+    print(commands)
     print('The current direction is {}'.format(current_direction))
+    
+    obstacle = list_obstacle(position, commands, current_position, robot_meta[rio-1]['dir'])
+    print('During an operation these following robots have to move')
+    print(obstacle)
     
     robot_meta[rio-1]['x'] = target_position[0]
     robot_meta[rio-1]['y'] = target_position[1]
     robot_meta[rio-1]['dir'] = current_direction
     position[current_position[0]][current_position[1]] = 'xx'
     position[target_position[0]][target_position[1]] = '{:02d}'.format(rio)
+    
+    print('The grid after operation')
     display_position(position)
+    print('------------------------------------------------------------------------')
   

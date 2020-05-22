@@ -48,8 +48,35 @@ def gen_movement_cmd(start, stop, dirrection):
         dirrection = 2 if y_distance > 0 else 4
         
 
-    print(commands)
-    return dirrection
+    # print(commands)
+    return commands, dirrection
+
+def list_obstacle(position_array, commands, start_pos, dirrection):
+    obstacles = []
+    current_x = start_pos[0]
+    current_y = start_pos[1]
+    current_direction = dirrection
+    for command in commands:
+        if command == 'T':
+            current_direction = (current_direction+2)%4 if current_direction != 2 else 4
+        elif command == 'Q':
+            current_direction = current_direction+1 if current_direction != 4 else 1
+        elif command == 'E':
+            current_direction = current_direction-1 if current_direction != 1 else 4
+        elif command == 'R':
+            if current_direction == 1:
+                current_x += 1
+            elif current_direction == 2:
+                current_y += 1
+            elif current_direction == 3:
+                current_x -= 1
+            elif current_direction == 4:
+                current_y -= 1
+            obstacles.append(position_array[current_x][current_y])
+    while 'xx' in obstacles:
+        obstacles.remove('xx')
+    return obstacles
+        
 
 
 if __name__ == '__main__':
