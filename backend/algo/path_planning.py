@@ -8,6 +8,11 @@ def gen_movement_cmd(start, stop, dirrection):
     y_distance = stop[1]-start[1]
 
     commands = []
+    ''' Command
+    Q = Turn Left
+    E = Turn Right
+    E = Turn Around
+    R = Forward '''
 
     if abs(x_distance) > 0:
 
@@ -44,6 +49,7 @@ def gen_movement_cmd(start, stop, dirrection):
         
 
     print(commands)
+    return dirrection
 
 
 if __name__ == '__main__':

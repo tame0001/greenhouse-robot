@@ -1,4 +1,5 @@
 import random
+from path_planning import gen_movement_cmd
 
 def random_coordinate():
     x_pos = random.randint(1, number_rows-2)
@@ -8,8 +9,15 @@ def random_coordinate():
 def display_position(position_array):
     for row in range(len(position_array)):
         print('{}'.format(position_array[row]))
-    
-
+        
+def find_free_spot(position_array):
+    free_spot = []
+    for row in range(1, number_rows-1):
+        for col in range(1, number_cols-1):
+            if position_array[row][col] == 'xx':
+                free_spot.append((row, col))
+    return free_spot
+ 
 number_rows = 6
 number_cols = 10
 
@@ -39,4 +47,44 @@ for robot in robot_number:
 display_position(position)
 
 
+while True:
+    
+    rio = input('Select robot id to move (1-24) or 0 to quit: ')
+    try:
+        rio = int(rio)
+    except err:
+        print('please enter an integer')
+        continue
 
+    if rio < 0 or rio > 24:
+        print('Invalid robot id')
+        continue
+    elif rio == 0:
+        break
+
+
+    free_spots = find_free_spot(position)
+    for spot in range(len(free_spots)):
+        print('({}): {}'.format(spot+1, free_spots[spot]))
+    
+    target_spot = input('Select target spot to move (1-8): ')
+    try:
+        target_spot = int(target_spot)
+    except err:
+        print('please enter an integer')
+        continue
+
+    if target_spot < 1 or target_spot > 8:
+        print('Invalid spot')
+        continue
+    
+    target_position = free_spots[target_spot-1]
+    current_position = (robot_meta[rio-1]['x'], robot_meta[rio-1]['y'])
+    current_direction = robot_meta[rio-1]['dir']
+    
+    print('move robot id {} from {} to {}'.format(rio, current_position, target_position))
+    print('the current direction is {}'.format(current_direction))
+    print('Following is the command for robot id {}'.format(rio))
+    current_direction = gen_movement_cmd(current_position, target_position, current_direction)
+    print('the current direction is {}'.format(current_direction))
+    
