@@ -82,9 +82,16 @@ while True:
     current_position = (robot_meta[rio-1]['x'], robot_meta[rio-1]['y'])
     current_direction = robot_meta[rio-1]['dir']
     
-    print('move robot id {} from {} to {}'.format(rio, current_position, target_position))
-    print('the current direction is {}'.format(current_direction))
+    print('Move robot id {} from {} to {}'.format(rio, current_position, target_position))
+    print('The current direction is {}'.format(current_direction))
     print('Following is the command for robot id {}'.format(rio))
     current_direction = gen_movement_cmd(current_position, target_position, current_direction)
-    print('the current direction is {}'.format(current_direction))
+    print('The current direction is {}'.format(current_direction))
     
+    robot_meta[rio-1]['x'] = target_position[0]
+    robot_meta[rio-1]['y'] = target_position[1]
+    robot_meta[rio-1]['dir'] = current_direction
+    position[current_position[0]][current_position[1]] = 'xx'
+    position[target_position[0]][target_position[1]] = '{:02d}'.format(rio)
+    display_position(position)
+  
