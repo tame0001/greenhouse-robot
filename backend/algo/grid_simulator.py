@@ -5,6 +5,11 @@ def random_coordinate():
     y_pos = random.randint(1, number_cols-2)
     return (x_pos, y_pos)
 
+def display_position(position_array):
+    for row in range(len(position_array)):
+        print('{}'.format(position_array[row]))
+    
+
 number_rows = 6
 number_cols = 10
 
@@ -15,6 +20,7 @@ for x in range(number_rows):
     for y in range(number_cols):
         position[x].append('xx')
 
+robot_meta = []
 robot_number = range(1, 25)
 for robot in robot_number:
     x_pos, y_pos = random_coordinate()
@@ -22,7 +28,15 @@ for robot in robot_number:
         x_pos, y_pos = random_coordinate()
     
     position[x_pos][y_pos] = '{:02d}'.format(robot)
+    meta_data = {
+        'id': robot,
+        'x': x_pos,
+        'y': y_pos,
+        'dir': random.randint(1, 4)
+    }
+    robot_meta.append(meta_data)
 
-for row in range(number_rows):
-    print('{}'.format(position[row]))
+display_position(position)
+
+
 
