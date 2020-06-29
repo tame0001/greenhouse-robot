@@ -6,6 +6,9 @@ String result;
 const char* result_ptr;
 int theshore =  150;
 
+const int batt = 34;
+int batt_level = 0;
+
 const int TEMP_ADDR = 0x49;
 int16_t temperature; // variables for temperature data
 
@@ -67,11 +70,11 @@ void loop()
   result = "";
   for(int i=0; i<8; i++){
     if(data[i*2] > theshore){
-    Serial.println("1");
+//    Serial.println("1");
     result.concat("1");
     }
     else{
-      Serial.println("0");
+//      Serial.println("0");
       result.concat("0");
     }
   }
@@ -91,6 +94,10 @@ void loop()
   temperature = (Wire.read()<<8 | Wire.read()) >> 5;
   Serial.print("Temperature = ");
   Serial.println(temperature*0.125);
+
+  batt_level = analogRead(batt);
+  Serial.print("Battery level = ");
+  Serial.println((batt_level+192)/1280.0*6);
   
   delay(1000);
 }

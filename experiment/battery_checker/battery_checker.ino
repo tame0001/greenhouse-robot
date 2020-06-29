@@ -12,6 +12,6 @@ void setup() {
 void loop() {
   // Reading potentiometer value
   batt_level = analogRead(batt);
-  Serial.println(batt_level);
-  delay(5000);
+  Serial.println((batt_level+192)/1280.0*6);
+  delay(1000);
 }
