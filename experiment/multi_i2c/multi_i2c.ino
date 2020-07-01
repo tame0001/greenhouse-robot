@@ -92,6 +92,7 @@ void loop()
   Wire.requestFrom(TEMP_ADDR, 2, true); // request a total of 7*2=14 registers
 
   temperature = (Wire.read()<<8 | Wire.read()) >> 5;
+//  Serial.println(temperature, HEX);
   Serial.print("Temperature = ");
   Serial.println(temperature*0.125);
 
