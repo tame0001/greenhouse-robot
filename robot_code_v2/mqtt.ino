@@ -1,20 +1,20 @@
 #ifdef MQTT_ON
 //  Report robot current state of operation
 void reportState() {
-  sprintf(payload, "%s:%d", robotID, state);
+  sprintf(payload, "%d:%d", robotID, state);
   mqtt_client->publish("irobot/feedback", payload);
 }
 
 //  Report current operation parameters
 void reportParameters(int left, int right) {
-  sprintf(payload, "%s:%d:%d", robotID, left, right);
+  sprintf(payload, "%d:%d:%d", robotID, left, right);
   mqtt_client->publish("irobot/parameters", payload);
 }
 
 //   MQTT Callback when connection is established
 void onConnectionEstablished()
 {
-  sprintf(commandTopic, "irobot/command/%s", robotID);
+  sprintf(commandTopic, "irobot/command/%d", robotID);
   reportState();
 //  getParameters();
 

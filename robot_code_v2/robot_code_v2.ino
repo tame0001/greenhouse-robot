@@ -9,8 +9,8 @@
 #define LINEPRINTOUT_ON
 
 //---------------------------------------------------------------
-
 //WiFi and MQTT parameters
+
 #define wifiSSID "i-robot"
 #define wifiPassword "1n1t1al0"
 //#define brokerIP "128.46.109.133"
@@ -24,8 +24,10 @@ EspMQTTClient *mqtt_client;
 
 //---------------------------------------------------------------
 //Global variables
-char robotID[3], robotName[10];
-int leftSpeed, rightSpeed, feedbackErr, drivingTime, turningTime;
+
+uint8_t robotID;
+char robotName[10];
+uint8_t leftSpeed, rightSpeed, feedbackErr;
 char payload[30], commandTopic[30];
 enum State {STOP, RUN, FORWARD, LEFT, RIGHT, UTURN, NONE};
 State state = NONE;
@@ -33,13 +35,19 @@ enum ForwatdStep {DEPART, FINDCROSS};
 ForwatdStep forward_step = DEPART;
 
 //---------------------------------------------------------------
+//EEPROM
+
+#define EEPROM_ADDR 0x50
+#define EEPROM_WC 23
+#define ROBOTID_ADDR 0x00
+
+//---------------------------------------------------------------
 
 void setup() {
   Wire.begin();
   Serial.begin(115200);
 
-  sprintf(robotID, "%s", "20");
-  sprintf(robotName, "i-robot%s", robotID);
+  initiate_eeprom();
 
 #ifdef MQTT_ON
   mqtt_client = new EspMQTTClient(

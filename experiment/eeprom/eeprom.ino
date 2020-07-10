@@ -5,20 +5,17 @@ const int MPU_ADDR = 0x50;
 void setup() {
   Serial.begin(115200);
   Wire.begin();
-  Wire.beginTransmission(MPU_ADDR); // Begins a transmission to the I2C slave (GY-521 board)
-  Wire.write(0x01); // PWR_MGMT_1 register
-  Wire.write(0); // set to zero (wakes up the MPU-6050)
+  Wire.beginTransmission(MPU_ADDR);
+  Wire.write(0x00);
+  Wire.write(7);
   Wire.endTransmission(true);
 }
 void loop() {
+  
   Wire.beginTransmission(MPU_ADDR);
-  Wire.write(0x00); // starting with register 0x3B (ACCEL_XOUT_H) [MPU-6000 and MPU-6050 Register Map and Descriptions Revision 4.2, p.40]
-  Wire.endTransmission(false); // the parameter indicates that the Arduino will send a restart. As a result, the connection is kept active.
-  Wire.requestFrom(MPU_ADDR, 2, true); // request a total of 7*2=14 registers
-
-  temperature = (Wire.read()<<8 | Wire.read()) >> 5;
-  Serial.println(temperature*0.125);
-
-  // delay
+  Wire.write(0x00); 
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU_ADDR, 1, true);
+  Serial.println(Wire.read());
   delay(1000);
 }
