@@ -12,7 +12,8 @@ import { LineSensorComponent } from './line-sensor/line-sensor.component';
 import { RobotParameterComponent } from './robot-parameter/robot-parameter.component';
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
-  hostname: '128.46.109.133',
+  // hostname: '128.46.109.133',
+  hostname: '192.168.1.191',
   port: 9001,
   path: '/'
 };
