@@ -16,7 +16,7 @@ void onConnectionEstablished()
 {
   sprintf(commandTopic, "irobot/command/%d", robotID);
   reportState();
-//  getParameters();
+  //  getParameters();
 
   //    subcription to command topic
   mqtt_client->subscribe(commandTopic, [](const String & payload) {
@@ -45,7 +45,7 @@ void onConnectionEstablished()
     }
 
     else if (payload == "u") {
-//      getParameters();
+      //      getParameters();
     }
 
     reportState();
