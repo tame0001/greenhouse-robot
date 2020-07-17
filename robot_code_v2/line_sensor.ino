@@ -74,6 +74,8 @@ void reportLineSensor() {
 }
 #endif
 
+//---------------------------------------------------------------
+
 //Process raw value from line IR sensor
 int analyzeIRData() {
   int sum = 0;

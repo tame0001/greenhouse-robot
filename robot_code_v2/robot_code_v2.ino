@@ -27,14 +27,15 @@ EspMQTTClient *mqttClient;
 
 uint8_t robotID;
 char robotName[10], ipAdress[16];
-uint8_t leftSpeed, rightSpeed, feedbackErr;
+uint8_t leftSpeed, rightSpeed, leftSpeed_255, rightSpeed_255;
+int8_t feedbackErr;
 char payload[30], commandTopic[30];
-enum State {STOP, RUN, FORWARD, LEFT, RIGHT, UTURN, NONE};
+enum State {STOP, RUN, TRACKLINE, LEFT, RIGHT, UTURN, NONE};
 State state = NONE;
-
 
 //---------------------------------------------------------------
 //Timers
+
 #ifdef TIMER_ON
 bool flagTimer0, flagTimer1;
 hw_timer_t* timer0 = NULL;
@@ -91,8 +92,34 @@ int16_t temperature;
 
 //---------------------------------------------------------------
 // Battery Checker
+
 #define BATT_PIN 34
-int battLevel;
+int16_t battLevel;
+
+//---------------------------------------------------------------
+//Movement parameters
+
+const int8_t baseSpeed = 70;
+const int8_t KP = 5;
+
+//---------------------------------------------------------------
+//Motor pins
+
+#define RIGHT_SPEED_PIN 25
+#define RIGHT_DIR_PIN 26
+#define LEFT_SPPED_PIN 32
+#define LEFT_DIR_PIN 33
+
+const int16_t freq = 3000;
+const char pwmChannelB = 1;
+const char pwmChannelA = 0;
+const char resolution = 8;
+
+enum Direction {FORWARD, BACKWARD};
+Direction dir = FORWARD;
+
+//IO Extender
+#define MOTORIO_ADDR 0x21
 
 //---------------------------------------------------------------
 
@@ -103,6 +130,8 @@ void setup() {
 
   initEeprom();
   initLedArray();
+  initMotorIO();
+  motorSleepOn();
 
 #ifdef MQTT_ON
   mqttClient = new EspMQTTClient(
@@ -151,5 +180,6 @@ void loop() {
 #endif
 
   stateHandler();
+  motorExecute();
 
 }
