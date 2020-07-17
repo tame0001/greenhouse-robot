@@ -2,13 +2,13 @@
 //  Report robot current state of operation
 void reportState() {
   sprintf(payload, "%d:%d", robotID, state);
-  mqtt_client->publish("irobot/feedback", payload);
+  mqttClient->publish("irobot/feedback", payload);
 }
 
 //  Report current operation parameters
 void reportParameters(int left, int right) {
   sprintf(payload, "%d:%d:%d", robotID, left, right);
-  mqtt_client->publish("irobot/parameters", payload);
+  mqttClient->publish("irobot/parameters", payload);
 }
 
 //   MQTT Callback when connection is established
@@ -19,7 +19,7 @@ void onConnectionEstablished()
   //  getParameters();
 
   //    subcription to command topic
-  mqtt_client->subscribe(commandTopic, [](const String & payload) {
+  mqttClient->subscribe(commandTopic, [](const String & payload) {
 #ifdef DEBUG
     Serial.print("Recieve message: ");
     Serial.println(payload);

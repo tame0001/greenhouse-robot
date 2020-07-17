@@ -4,9 +4,9 @@
 #include "ArduinoJson.h"
 
 //#define DEBUG
+//#define LINEDEBUG_ON
 #define MQTT_ON
 #define TIMER_ON
-#define LINEPRINTOUT_ON
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters
@@ -19,7 +19,7 @@
 
 #ifdef MQTT_ON
 // create MQTT client using pointer
-EspMQTTClient *mqtt_client;
+EspMQTTClient *mqttClient;
 #endif
 
 //---------------------------------------------------------------
@@ -31,13 +31,12 @@ uint8_t leftSpeed, rightSpeed, feedbackErr;
 char payload[30], commandTopic[30];
 enum State {STOP, RUN, FORWARD, LEFT, RIGHT, UTURN, NONE};
 State state = NONE;
-enum ForwatdStep {DEPART, FINDCROSS};
-ForwatdStep forward_step = DEPART;
+
 
 //---------------------------------------------------------------
 //Timers
 #ifdef TIMER_ON
-bool flagTimer0, flagTimer1, lineSensorFlag;
+bool flagTimer0, flagTimer1;
 hw_timer_t* timer0 = NULL;
 hw_timer_t* timer1 = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
@@ -69,16 +68,44 @@ void IRAM_ATTR onTimer1() {
 #define ROBOTID_ADDR 0x00
 
 //---------------------------------------------------------------
+//Line follower parameters
+
+#define LINE_THESHORE 150
+#define LINE_ADDR 0x09
+unsigned char lineData[16];
+char line[8];
+unsigned char linePos;
+String result;
+
+//--------------------------------------------------------------
+//LED Array
+
+#define LEDARRAY_ADDR 0x23
+const char* linePtr;
+
+//---------------------------------------------------------------
+//On-board Temperature Sensor
+
+#define ONTEMP_ADDR 0x49
+int16_t temperature;
+
+//---------------------------------------------------------------
+// Battery Checker
+#define BATT_PIN 34
+int battLevel;
+
+//---------------------------------------------------------------
 
 void setup() {
 
   Wire.begin();
   Serial.begin(115200);
 
-  initiate_eeprom();
+  initEeprom();
+  initLedArray();
 
 #ifdef MQTT_ON
-  mqtt_client = new EspMQTTClient(
+  mqttClient = new EspMQTTClient(
     wifiSSID,
     wifiPassword,
     brokerIP,
@@ -86,22 +113,21 @@ void setup() {
     brokerPort
   );
 
-  mqtt_client->enableDebuggingMessages();
-  mqtt_client->enableHTTPWebUpdater();
+  mqttClient->enableDebuggingMessages();
+  mqttClient->enableHTTPWebUpdater();
 #endif
 
 #ifdef TIMER_ON
-
   //timer0 setup 1 second
   timer0 = timerBegin(0, 80, true);
   timerAttachInterrupt(timer0, &onTimer0, true);
   timerAlarmWrite(timer0, 1000000, true);
   timerAlarmEnable(timer0);
 
-  //timer1 setup 20 milliseconds
+  //timer1 setup 50 milliseconds
   timer1 = timerBegin(1, 80, true);
   timerAttachInterrupt(timer1, &onTimer1, true);
-  timerAlarmWrite(timer1, 20000, true);
+  timerAlarmWrite(timer1, 50000, true);
   timerAlarmEnable(timer1);
 #endif
 }
@@ -109,7 +135,7 @@ void setup() {
 void loop() {
 
 #ifdef MQTT_ON
-  mqtt_client->loop();
+  mqttClient->loop();
 #endif
 
 #ifdef TIMER_ON
@@ -121,5 +147,4 @@ void loop() {
     timer1Service();
   }
 #endif
-
 }

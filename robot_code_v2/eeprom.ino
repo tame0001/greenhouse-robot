@@ -1,7 +1,7 @@
-void initiate_eeprom() {
+void initEeprom() {
 
   pinMode(EEPROM_WC, OUTPUT);
-  eeprom_write_protect_on();
+  eepromWriteProtectOn();
 
   Wire.beginTransmission(EEPROM_ADDR);
   Wire.write(ROBOTID_ADDR);
@@ -12,10 +12,10 @@ void initiate_eeprom() {
   sprintf(robotName, "i-robot%d", robotID);
 }
 
-void eeprom_write_protect_on() {
+void eepromWriteProtectOn() {
   digitalWrite(EEPROM_WC, LOW);
 }
 
-void eeprom_write_protect_off() {
+void eepromWriteProtectOff() {
   digitalWrite(EEPROM_WC, HIGH);
 }
