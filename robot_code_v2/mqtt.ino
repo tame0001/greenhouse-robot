@@ -12,43 +12,45 @@ void reportParameters(int left, int right) {
 }
 
 //   MQTT Callback when connection is established
+
+void commandTopicCallBack(const String &inPayload) {
+#ifdef DEBUG
+  Serial.print("Recieve message: ");
+  Serial.println(inPayload);
+#endif
+
+  if (inPayload == "s") {
+    state = STOP;
+  }
+  else if (inPayload == "w") {
+    state = RUN;
+  }
+
+  else if (inPayload == "r") {
+    state = FORWARD;
+  }
+
+  else if (inPayload == "q") {
+    state = LEFT;
+  }
+
+  else if (inPayload == "e") {
+    state = RIGHT;
+  }
+
+  else if (inPayload == "u") {
+    //      getParameters();
+  }
+
+  reportState();
+}
+
 void onConnectionEstablished()
 {
   sprintf(commandTopic, "irobot/command/%d", robotID);
   reportState();
   //  getParameters();
 
-  //    subcription to command topic
-  mqttClient->subscribe(commandTopic, [](const String & payload) {
-#ifdef DEBUG
-    Serial.print("Recieve message: ");
-    Serial.println(payload);
-#endif
-
-    if (payload == "s") {
-      state = STOP;
-    }
-    else if (payload == "w") {
-      state = RUN;
-    }
-
-    else if (payload == "r") {
-      state = FORWARD;
-    }
-
-    else if (payload == "q") {
-      state = LEFT;
-    }
-
-    else if (payload == "e") {
-      state = RIGHT;
-    }
-
-    else if (payload == "u") {
-      //      getParameters();
-    }
-
-    reportState();
-  });
+  mqttClient->subscribe(commandTopic, commandTopicCallBack);
 }
 #endif
