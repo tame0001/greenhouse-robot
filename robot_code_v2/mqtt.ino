@@ -11,8 +11,6 @@ void reportParameters(int left, int right) {
   mqttClient->publish("irobot/parameters", payload);
 }
 
-//   MQTT Callback when connection is established
-
 void commandTopicCallBack(const String &inPayload) {
 #ifdef DEBUG
   Serial.print("Recieve message: ");
