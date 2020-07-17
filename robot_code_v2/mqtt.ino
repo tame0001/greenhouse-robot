@@ -5,11 +5,15 @@ void reportState() {
   mqttClient->publish("irobot/feedback", payload);
 }
 
+//---------------------------------------------------------------
+
 //  Report current operation parameters
 void reportParameters(int left, int right) {
   sprintf(payload, "%d:%d:%d", robotID, left, right);
   mqttClient->publish("irobot/parameters", payload);
 }
+
+//---------------------------------------------------------------
 
 void commandTopicCallBack(const String &inPayload) {
 #ifdef DEBUG
@@ -43,6 +47,8 @@ void commandTopicCallBack(const String &inPayload) {
   reportState();
 }
 
+//---------------------------------------------------------------
+
 void onConnectionEstablished()
 {
   sprintf(commandTopic, "irobot/command/%d", robotID);
@@ -52,3 +58,5 @@ void onConnectionEstablished()
   mqttClient->subscribe(commandTopic, commandTopicCallBack);
 }
 #endif
+
+//---------------------------------------------------------------

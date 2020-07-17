@@ -65,6 +65,8 @@ void readIRData() {
 
 }
 
+//---------------------------------------------------------------
+
 #ifdef MQTT_ON
 void reportLineSensor() {
   sprintf(payload, "%d:%s", robotID, line);
@@ -86,6 +88,8 @@ int analyzeIRData() {
   return sum;
 }
 
+//---------------------------------------------------------------
+
 void initLedArray() {
   Wire.beginTransmission(LEDARRAY_ADDR);
   Wire.write(0x03);
@@ -93,3 +97,5 @@ void initLedArray() {
   Wire.endTransmission(true);
 
 }
+
+//---------------------------------------------------------------

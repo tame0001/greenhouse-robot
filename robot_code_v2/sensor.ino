@@ -9,11 +9,15 @@ void readOnboardTemp() {
   Serial.println(temperature * 0.125);
 }
 
+//---------------------------------------------------------------
+
 void readBattLevel() {
   battLevel = analogRead(BATT_PIN);
   Serial.print("Battery level = ");
   Serial.println((battLevel + 192) / 1280.0 * 6);
 }
+
+//---------------------------------------------------------------
 
 void initEeprom() {
 
@@ -29,10 +33,16 @@ void initEeprom() {
   sprintf(robotName, "i-robot%d", robotID);
 }
 
+//---------------------------------------------------------------
+
 void eepromWriteProtectOn() {
   digitalWrite(EEPROM_WC, LOW);
 }
 
+//---------------------------------------------------------------
+
 void eepromWriteProtectOff() {
   digitalWrite(EEPROM_WC, HIGH);
 }
+
+//---------------------------------------------------------------

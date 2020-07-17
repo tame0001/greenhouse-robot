@@ -132,6 +132,8 @@ void setup() {
 #endif
 }
 
+//---------------------------------------------------------------
+
 void loop() {
 
 #ifdef MQTT_ON
@@ -147,4 +149,7 @@ void loop() {
     timer1Service();
   }
 #endif
+
+  stateHandler();
+
 }
