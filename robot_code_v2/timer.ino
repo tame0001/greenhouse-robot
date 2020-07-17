@@ -5,10 +5,9 @@ void timer0Service() {
   readBattLevel();
   readOnboardTemp();
   
-
 #ifdef MQTT_ON
-  //  reportParameters(leftSpeed, rightSpeed);
-//      reportLineSensor();
+//    reportParameters(leftSpeed, rightSpeed);
+      reportLineSensor();
 #endif
 }
 

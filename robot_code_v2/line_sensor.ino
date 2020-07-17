@@ -67,7 +67,7 @@ void readIRData() {
 
 #ifdef MQTT_ON
 void reportLineSensor() {
-  sprintf(payload, "%s:%s", robotID, line);
+  sprintf(payload, "%d:%s", robotID, line);
   mqttClient->publish("irobot/linesensor", payload);
 }
 #endif
