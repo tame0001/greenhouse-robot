@@ -48,8 +48,8 @@ void motorSleepOn() {
   temp = temp & 0x7B;
   
   Wire.beginTransmission(MOTORIO_ADDR);
-  Wire.write(0x01); //
-  Wire.write(temp); //
+  Wire.write(0x01);
+  Wire.write(temp);
   Wire.endTransmission(true);
   
 }
@@ -67,8 +67,8 @@ void motorSleepOff() {
   temp = temp | 0x84;
   
   Wire.beginTransmission(MOTORIO_ADDR);
-  Wire.write(0x01); //
-  Wire.write(temp); //
+  Wire.write(0x01);
+  Wire.write(temp);
   Wire.endTransmission(true);
   
 }
