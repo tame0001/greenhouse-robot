@@ -1,6 +1,6 @@
 void readOnboardTemp() {
   Wire.beginTransmission(ONTEMP_ADDR);
-  Wire.write(0x00);   
+  Wire.write(0x00);
   Wire.endTransmission(false);
   Wire.requestFrom(ONTEMP_ADDR, 2, true);
 
@@ -44,5 +44,89 @@ void eepromWriteProtectOn() {
 void eepromWriteProtectOff() {
   digitalWrite(EEPROM_WC, HIGH);
 }
+
+//---------------------------------------------------------------
+
+void blueLedOn() {
+
+  char temp;
+
+  Wire.beginTransmission(MOTORIO_ADDR);
+  Wire.write(0x01);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MOTORIO_ADDR, 1, true);
+  temp = Wire.read();
+
+  temp = temp & 0xF7;
+
+  Wire.beginTransmission(MOTORIO_ADDR);
+  Wire.write(0x01); 
+  Wire.write(temp); 
+  Wire.endTransmission(true);
+}
+
+
+//---------------------------------------------------------------
+
+void blueLedOff() {
+
+  char temp;
+
+  Wire.beginTransmission(MOTORIO_ADDR);
+  Wire.write(0x01);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MOTORIO_ADDR, 1, true);
+  temp = Wire.read();
+
+  temp = temp | 0x08;
+
+  Wire.beginTransmission(MOTORIO_ADDR);
+  Wire.write(0x01); 
+  Wire.write(temp); 
+  Wire.endTransmission(true);
+}
+
+
+//---------------------------------------------------------------
+
+void greenLedOn() {
+
+  char temp;
+
+  Wire.beginTransmission(MOTORIO_ADDR);
+  Wire.write(0x01);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MOTORIO_ADDR, 1, true);
+  temp = Wire.read();
+
+  temp = temp & 0xEF;
+
+  Wire.beginTransmission(MOTORIO_ADDR);
+  Wire.write(0x01); 
+  Wire.write(temp); 
+  Wire.endTransmission(true);
+}
+
+
+//---------------------------------------------------------------
+
+void greenLedOff() {
+
+  char temp;
+
+  Wire.beginTransmission(MOTORIO_ADDR);
+  Wire.write(0x01);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MOTORIO_ADDR, 1, true);
+  temp = Wire.read();
+
+  temp = temp | 0x10;
+
+  Wire.beginTransmission(MOTORIO_ADDR);
+  Wire.write(0x01); 
+  Wire.write(temp); 
+  Wire.endTransmission(true);
+}
+
 
 //---------------------------------------------------------------

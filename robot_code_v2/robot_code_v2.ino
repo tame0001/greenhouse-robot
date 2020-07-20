@@ -132,6 +132,8 @@ void setup() {
   initLedArray();
   initMotorIO();
   motorSleepOn();
+  blueLedOff();
+  greenLedOff();
 
 #ifdef MQTT_ON
   mqttClient = new EspMQTTClient(
