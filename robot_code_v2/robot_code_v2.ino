@@ -111,15 +111,22 @@ const int8_t KP = 5;
 #define LEFT_DIR_PIN 33
 
 const int16_t freq = 3000;
-const char pwmChannelB = 1;
-const char pwmChannelA = 0;
+const char LeftPWM = 1;
+const char RightPWM = 0;
 const char resolution = 8;
 
-enum Direction {FORWARD, BACKWARD};
+enum Direction {BACKWARD,FORWARD};
 Direction dir = FORWARD;
 
+//---------------------------------------------------------------
 //IO Extender
 #define MOTORIO_ADDR 0x21
+
+//---------------------------------------------------------------
+//Firmware version
+#define MAJOR_VERSION 2
+#define MINOR_VERSION 3
+#define BUILD_VERSION 0
 
 //---------------------------------------------------------------
 
@@ -131,9 +138,9 @@ void setup() {
   initEeprom();
   initLedArray();
   initMotorIO();
-  motorSleepOn();
+  motorSleepOff();
   blueLedOff();
-  greenLedOff();
+  greenLedOn();
 
 #ifdef MQTT_ON
   mqttClient = new EspMQTTClient(
@@ -155,10 +162,10 @@ void setup() {
   timerAlarmWrite(timer0, 1000000, true);
   timerAlarmEnable(timer0);
 
-  //timer1 setup 50 milliseconds
+  //timer1 setup 20 milliseconds
   timer1 = timerBegin(1, 80, true);
   timerAttachInterrupt(timer1, &onTimer1, true);
-  timerAlarmWrite(timer1, 50000, true);
+  timerAlarmWrite(timer1, 20000, true);
   timerAlarmEnable(timer1);
 #endif
 }

@@ -2,8 +2,8 @@ void motorExecute() {
 
   leftSpeed_255 = map(leftSpeed, 0, 100, 0, 255);
   rightSpeed_255 = map(rightSpeed, 0, 100, 0, 255);
-  ledcWrite(pwmChannelB, leftSpeed_255);
-  ledcWrite(pwmChannelA, rightSpeed_255);
+  ledcWrite(LeftPWM, leftSpeed_255);
+  ledcWrite(RightPWM, rightSpeed_255);
 }
 
 //---------------------------------------------------------------
@@ -20,10 +20,10 @@ void initMotorIO() {
   Wire.write(0xE7); //
   Wire.endTransmission(true);
 
-  ledcSetup(pwmChannelA, freq, resolution);
-  ledcSetup(pwmChannelB, freq, resolution);
-  ledcAttachPin(LEFT_SPPED_PIN, pwmChannelB);
-  ledcAttachPin(RIGHT_SPEED_PIN, pwmChannelA);
+  ledcSetup(LeftPWM, freq, resolution);
+  ledcSetup(RightPWM, freq, resolution);
+  ledcAttachPin(LEFT_SPPED_PIN, LeftPWM);
+  ledcAttachPin(RIGHT_SPEED_PIN, RightPWM);
 
   pinMode(RIGHT_DIR_PIN, OUTPUT);
   pinMode(LEFT_DIR_PIN, OUTPUT);
