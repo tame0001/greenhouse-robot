@@ -19,6 +19,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   splitedMessage: any;
   letfSpeed: string = '-';
   rightSpeed: string = '-';
+  temperatureOnBoard: any = '-';
   drivingTime: string;
   turningTime: string;
   conmmandTopic: string;
@@ -30,15 +31,20 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
 
   constructor(private mqttService: MqttService, private http:HttpClient) {    
 
-    this.parameterSub = this.mqttService.observe('irobot/feedback').subscribe((
+    this.parameterSub = this.mqttService.observe('irobot/parameters').subscribe((
       message: IMqttMessage) => {
         this.mqttMessage = message.payload.toString();
         // console.log(this.mqttMessage);
         this.splitedMessage = this.mqttMessage.split(':');
         // console.log(this.splitedMessage);
-        if (this.splitedMessage[0] == this.robotID && this.splitedMessage[1] == '1') {
+        if (this.splitedMessage[0] == this.robotID && this.splitedMessage[1] == '0') {
           this.letfSpeed = this.splitedMessage[2];
           this.rightSpeed = this.splitedMessage[3];
+          this.temperatureOnBoard = (Number(this.splitedMessage[4]) * 0.125).toFixed(1);
+
+          if (this.currentStatus == 'OFFLINE') {
+            this.currentStatus = 'STOPPING';
+          }
         } 
       });
 
@@ -48,7 +54,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
           // console.log(this.mqttMessage);
           this.splitedMessage = this.mqttMessage.split(':');
           // console.log(this.splitedMessage);
-          if (this.splitedMessage[0] == this.robotID && this.splitedMessage[1] == '0') {
+          if (this.splitedMessage[0] == this.robotID) {
             switch (this.splitedMessage[2]) {
               case '0':
                 this.currentStatus = 'STOPPING';

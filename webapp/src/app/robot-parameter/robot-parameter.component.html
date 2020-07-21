@@ -15,7 +15,10 @@
         <div class="col border"> {{ rightSpeed }}%</div>
     </div>
 
-    <app-line-sensor [robotID] = robotID></app-line-sensor>
+    <div class="row">
+        <div class="col-sm-6">Temperature</div>
+        <div class="col-sm-6">{{ temperatureOnBoard }} Celcius</div>
+    </div>
 
     <div class="row m-1">
         <div class="col-sm-6">
@@ -37,6 +40,8 @@
             <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendRight()">Right</button>
         </div>        
     </div>
+
+    <app-line-sensor [robotID] = robotID></app-line-sensor>
 
     <!-- <div class="row m-1" *ngIf="showConfigureBool">
         <div class="row">
