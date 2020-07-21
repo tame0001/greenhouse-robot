@@ -15,7 +15,7 @@ export class LineSensorComponent implements OnInit, OnDestroy {
   lineSensorSub: Subscription;
   mqttMessage: string;
   splitedMessage: any;
-  lineSensor: string;
+  lineSensor: string = 'xxxxxxxx';
 
   constructor(private mqttService: MqttService) {
 

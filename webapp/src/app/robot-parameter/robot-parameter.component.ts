@@ -18,8 +18,8 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   feedbackSub: Subscription;
   mqttMessage: string;
   splitedMessage: any;
-  letfSpeed: string;
-  rightSpeed: string;
+  letfSpeed: string = '-';
+  rightSpeed: string = '-';
   drivingTime: string;
   turningTime: string;
   conmmandTopic: string;
