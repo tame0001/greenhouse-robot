@@ -1,14 +1,22 @@
 <div class="container" style="text-align:center">
+
     <div class="row">
-        <div class="col">ID = {{ robotID }}</div>
-        <div class="col">{{ currentStatus }}</div>
+        <div class="col">Robot ID = {{ robotID }}</div>
     </div>
+
+    <div class="row">
+        <div class="col-sm-3">Status</div>
+        <div class="col-sm-9">{{ currentStatus }}</div>
+    </div>
+
     <div class="row">
         <div class="col border"> {{ letfSpeed }}%</div>
         <div class="col">Speed</div>
         <div class="col border"> {{rightSpeed }}%</div>
     </div>
+
     <app-line-sensor [robotID] = robotID></app-line-sensor>
+
     <div class="row m-1">
         <div class="col-sm-6">
             <button type="button" class="btn btn-success" (click)="sendRun()">Run</button>
@@ -17,6 +25,7 @@
             <button type="button" class="btn btn-danger" (click)="sendStop()">Stop</button> 
         </div>      
     </div>
+
     <div class="row text-center">
         <div class="col-sm-3">
             <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendLeft()">Left</button>
@@ -28,7 +37,8 @@
             <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendRight()">Right</button>
         </div>        
     </div>
-    <div class="row m-1" *ngIf="showConfigureBool">
+
+    <!-- <div class="row m-1" *ngIf="showConfigureBool">
         <div class="row">
             <div class="col">Driving</div> 
             <div class="col">
@@ -71,6 +81,6 @@
         <div class="col">
             <button type="button" class="btn btn-warning btn-sm" (click)="hideConfigure()">Hide Configure</button>
         </div>
-    </div>
+    </div> -->
     
 </div>

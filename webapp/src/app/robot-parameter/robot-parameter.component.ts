@@ -60,7 +60,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
                 this.currentStatus = 'RUNNING';
                 break;
               case '2':
-                this.currentStatus = 'FORWARDING';
+                this.currentStatus = 'MOVING';
                 break;
               case '3':
                 this.currentStatus = 'TURNING LEFT';
@@ -137,7 +137,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
 
   ngOnInit() {
     this.conmmandTopic = 'irobot/command/'.concat(this.robotID);
-    this.getParameters();
+    // this.getParameters();
   }
 
   public unsafePublish(topic: string, message: string): void {
