@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 import { MqttService, IMqttMessage } from 'ngx-mqtt';
 import { HttpClient} from '@angular/common/http';
 
-
 @Component({
   selector: 'app-robot-parameter',
   templateUrl: './robot-parameter.component.html',
@@ -24,7 +23,6 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   turningTime: string;
   conmmandTopic: string;
 
-
   showConfigureBool: boolean = false;
   currentStatus: string = 'OFFLINE';
   backendURL: string = 'http://localhost:5000';
@@ -32,16 +30,15 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
 
   constructor(private mqttService: MqttService, private http:HttpClient) {    
 
-    this.parameterSub = this.mqttService.observe('irobot/parameters').subscribe((
+    this.parameterSub = this.mqttService.observe('irobot/feedback').subscribe((
       message: IMqttMessage) => {
         this.mqttMessage = message.payload.toString();
         // console.log(this.mqttMessage);
         this.splitedMessage = this.mqttMessage.split(':');
         // console.log(this.splitedMessage);
-        // this.robotID = this.splitedMessage[0];
-        if (this.splitedMessage[0] == this.robotID) {
-          this.letfSpeed = this.splitedMessage[1];
-          this.rightSpeed = this.splitedMessage[2];
+        if (this.splitedMessage[0] == this.robotID && this.splitedMessage[1] == '1') {
+          this.letfSpeed = this.splitedMessage[2];
+          this.rightSpeed = this.splitedMessage[3];
         } 
       });
 
@@ -50,9 +47,9 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
           this.mqttMessage = message.payload.toString();
           // console.log(this.mqttMessage);
           this.splitedMessage = this.mqttMessage.split(':');
-          // this.robotID = this.splitedMessage[0];
-          if (this.splitedMessage[0] == this.robotID) {
-            switch (this.splitedMessage[1]) {
+          // console.log(this.splitedMessage);
+          if (this.splitedMessage[0] == this.robotID && this.splitedMessage[1] == '0') {
+            switch (this.splitedMessage[2]) {
               case '0':
                 this.currentStatus = 'STOPPING';
                 break;
