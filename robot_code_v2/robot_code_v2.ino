@@ -40,7 +40,7 @@ enum State {STOP, RUN, MOVE, LEFT, RIGHT, UTURN, NONE};
 State state = NONE;
 enum Message {READY, I2C_FAULT};
 Message msg = READY;
-enum Feedback {STATE, SPEED, ONB_TEMP, BATT, OFFB_TEMP, LIGHT};
+enum Feedback {ALL, SPEED, ONB_TEMP, BATT, OFFB_TEMP, LIGHT};
 
 //---------------------------------------------------------------
 //Timers

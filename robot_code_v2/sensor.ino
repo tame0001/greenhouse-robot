@@ -5,8 +5,11 @@ void readOnboardTemp() {
   Wire.requestFrom(ONTEMP_ADDR, 2, true);
 
   temperature = (Wire.read() << 8 | Wire.read()) >> 5;
+
+#ifdef DEBUG
   Serial.print("Temperature = ");
   Serial.println(temperature * 0.125);
+#endif
 }
 
 //---------------------------------------------------------------
@@ -60,8 +63,8 @@ void blueLedOn() {
   temp = temp & 0xF7;
 
   Wire.beginTransmission(MOTORIO_ADDR);
-  Wire.write(0x01); 
-  Wire.write(temp); 
+  Wire.write(0x01);
+  Wire.write(temp);
   Wire.endTransmission(true);
 }
 
@@ -81,8 +84,8 @@ void blueLedOff() {
   temp = temp | 0x08;
 
   Wire.beginTransmission(MOTORIO_ADDR);
-  Wire.write(0x01); 
-  Wire.write(temp); 
+  Wire.write(0x01);
+  Wire.write(temp);
   Wire.endTransmission(true);
 }
 
@@ -102,8 +105,8 @@ void greenLedOn() {
   temp = temp & 0xEF;
 
   Wire.beginTransmission(MOTORIO_ADDR);
-  Wire.write(0x01); 
-  Wire.write(temp); 
+  Wire.write(0x01);
+  Wire.write(temp);
   Wire.endTransmission(true);
 }
 
@@ -123,8 +126,8 @@ void greenLedOff() {
   temp = temp | 0x10;
 
   Wire.beginTransmission(MOTORIO_ADDR);
-  Wire.write(0x01); 
-  Wire.write(temp); 
+  Wire.write(0x01);
+  Wire.write(temp);
   Wire.endTransmission(true);
 }
 

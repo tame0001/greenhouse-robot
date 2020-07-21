@@ -1,7 +1,7 @@
 #ifdef MQTT_ON
 //  Report robot current state of operation
 void reportState() {
-  sprintf(payload, "%d:%d:%d", robotID, STATE, state);
+  sprintf(payload, "%d:%d", robotID, state);
   mqttClient->publish("irobot/feedback", payload);
 }
 
@@ -9,8 +9,8 @@ void reportState() {
 
 //  Report current operation parameters
 void reportParameters(int left, int right) {
-  sprintf(payload, "%d:%d:%d:%d", robotID, SPEED, left, right);
-  mqttClient->publish("irobot/feedback", payload);
+  sprintf(payload, "%d:%d:%d:%d:%d", robotID, ALL, leftSpeed, rightSpeed, temperature);
+  mqttClient->publish("irobot/parameters", payload);
 }
 
 //---------------------------------------------------------------
