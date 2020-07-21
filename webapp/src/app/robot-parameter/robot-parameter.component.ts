@@ -20,6 +20,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   letfSpeed: string = '-';
   rightSpeed: string = '-';
   temperatureOnBoard: any = '-';
+  batteryLevel: any = '-';
   drivingTime: string;
   turningTime: string;
   conmmandTopic: string;
@@ -41,6 +42,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
           this.letfSpeed = this.splitedMessage[2];
           this.rightSpeed = this.splitedMessage[3];
           this.temperatureOnBoard = (Number(this.splitedMessage[4]) * 0.125).toFixed(1);
+          this.batteryLevel = (Number(this.splitedMessage[5]) * 5.5 / 1280).toFixed(1);
 
           if (this.currentStatus == 'OFFLINE') {
             this.currentStatus = 'STOPPING';

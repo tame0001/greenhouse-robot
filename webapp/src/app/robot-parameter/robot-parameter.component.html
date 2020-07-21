@@ -20,6 +20,11 @@
         <div class="col-sm-6">{{ temperatureOnBoard }} Celcius</div>
     </div>
 
+    <div class="row">
+        <div class="col-sm-6">Battery Level</div>
+        <div class="col-sm-6">{{ batteryLevel }} Volts</div>
+    </div>
+
     <div class="row m-1">
         <div class="col-sm-6">
             <button type="button" class="btn btn-success" (click)="sendRun()">Run</button>
