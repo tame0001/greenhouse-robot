@@ -9,7 +9,13 @@ void reportState() {
 
 //  Report current operation parameters
 void reportParameters(int left, int right) {
-  sprintf(payload, "%d:%d:%d:%d:%d", robotID, ALL, leftSpeed, rightSpeed, temperature);
+  sprintf(payload, "%d:%d:%d:%d:%d:%d",
+          robotID,
+          ALL,
+          leftSpeed,
+          rightSpeed,
+          temperature,
+          battLevel + 192);
   mqttClient->publish("irobot/parameters", payload);
 }
 

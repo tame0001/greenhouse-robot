@@ -16,8 +16,10 @@ void readOnboardTemp() {
 
 void readBattLevel() {
   battLevel = analogRead(BATT_PIN);
+#ifdef DEBUG
   Serial.print("Battery level = ");
-  Serial.println((battLevel + 192) / 1280.0 * 6);
+  Serial.println((battLevel + 192) / 1280.0 * 5.5);
+#endif
 }
 
 //---------------------------------------------------------------

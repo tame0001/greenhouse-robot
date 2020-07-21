@@ -12,7 +12,7 @@
 //Firmware version
 #define MAJOR_VERSION 2
 #define MINOR_VERSION 3
-#define BUILD_VERSION 2
+#define BUILD_VERSION 3
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters
@@ -35,7 +35,7 @@ uint8_t robotID;
 char robotName[10], ipAdress[16];
 uint8_t leftSpeed, rightSpeed, leftSpeed_255, rightSpeed_255;
 int8_t feedbackErr;
-char payload[30], commandTopic[30];
+char payload[50], commandTopic[30];
 enum State {STOP, RUN, MOVE, LEFT, RIGHT, UTURN, NONE};
 State state = NONE;
 enum Message {READY, I2C_FAULT};
