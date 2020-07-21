@@ -30,7 +30,7 @@ char robotName[10], ipAdress[16];
 uint8_t leftSpeed, rightSpeed, leftSpeed_255, rightSpeed_255;
 int8_t feedbackErr;
 char payload[30], commandTopic[30];
-enum State {STOP, RUN, TRACKLINE, LEFT, RIGHT, UTURN, NONE};
+enum State {STOP, RUN, MOVE, LEFT, RIGHT, UTURN, NONE};
 State state = NONE;
 
 //---------------------------------------------------------------
@@ -102,6 +102,9 @@ int16_t battLevel;
 const int8_t baseSpeed = 70;
 const int8_t KP = 5;
 
+enum MoveStep {INITIAL, DEPART_CROSS, FIND_CROSS, DEPART_CENTER, FIND_CENTER};
+MoveStep moveStep = INITIAL;
+
 //---------------------------------------------------------------
 //Motor pins
 
@@ -115,8 +118,8 @@ const char LeftPWM = 1;
 const char RightPWM = 0;
 const char resolution = 8;
 
-enum Direction {BACKWARD,FORWARD};
-Direction dir = FORWARD;
+enum Direction {BACKWARD, FORWARD};
+
 
 //---------------------------------------------------------------
 //IO Extender
@@ -126,7 +129,7 @@ Direction dir = FORWARD;
 //Firmware version
 #define MAJOR_VERSION 2
 #define MINOR_VERSION 3
-#define BUILD_VERSION 0
+#define BUILD_VERSION 1
 
 //---------------------------------------------------------------
 

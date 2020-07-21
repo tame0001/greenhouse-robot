@@ -28,8 +28,8 @@ void initMotorIO() {
   pinMode(RIGHT_DIR_PIN, OUTPUT);
   pinMode(LEFT_DIR_PIN, OUTPUT);
 
-  digitalWrite(RIGHT_DIR_PIN, dir);
-  digitalWrite(LEFT_DIR_PIN, dir);
+  digitalWrite(RIGHT_DIR_PIN, FORWARD);
+  digitalWrite(LEFT_DIR_PIN, FORWARD);
 
 }
 

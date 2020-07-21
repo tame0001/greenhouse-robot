@@ -29,7 +29,7 @@ void commandTopicCallBack(const String &inPayload) {
   }
 
   else if (inPayload == "r") {
-    state = TRACKLINE;
+    state = MOVE;
   }
 
   else if (inPayload == "q") {
