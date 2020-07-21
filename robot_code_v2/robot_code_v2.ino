@@ -9,6 +9,12 @@
 #define TIMER_ON
 
 //---------------------------------------------------------------
+//Firmware version
+#define MAJOR_VERSION 2
+#define MINOR_VERSION 3
+#define BUILD_VERSION 2
+
+//---------------------------------------------------------------
 //WiFi and MQTT parameters
 
 #define wifiSSID "i-robot"
@@ -32,6 +38,9 @@ int8_t feedbackErr;
 char payload[30], commandTopic[30];
 enum State {STOP, RUN, MOVE, LEFT, RIGHT, UTURN, NONE};
 State state = NONE;
+enum Message {READY, I2C_FAULT};
+Message msg = READY;
+enum Feedback {STATE, SPEED, ONB_TEMP, BATT, OFFB_TEMP, LIGHT};
 
 //---------------------------------------------------------------
 //Timers
@@ -126,12 +135,6 @@ enum Direction {BACKWARD, FORWARD};
 #define MOTORIO_ADDR 0x21
 
 //---------------------------------------------------------------
-//Firmware version
-#define MAJOR_VERSION 2
-#define MINOR_VERSION 3
-#define BUILD_VERSION 1
-
-//---------------------------------------------------------------
 
 void setup() {
 
@@ -143,7 +146,8 @@ void setup() {
   initMotorIO();
   motorSleepOff();
   blueLedOff();
-  greenLedOn();
+  greenLedOff();
+  checki2c();
 
 #ifdef MQTT_ON
   mqttClient = new EspMQTTClient(
