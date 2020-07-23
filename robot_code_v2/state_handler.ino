@@ -36,6 +36,45 @@ void stateHandler() {
 
   }
   //----------------------------
+  else if (state == LEFT) {
+
+    if (moveStep == INITIAL) {
+      moveStep = DEPART_CENTER;
+    }
+
+    else if (moveStep == DEPART_CENTER) {
+      leftSpeed = baseSpeed;
+      rightSpeed = baseSpeed;
+      digitalWrite(LEFT_DIR_PIN, BACKWARD);
+      digitalWrite(RIGHT_DIR_PIN, FORWARD);
+      if (line[0] == '1' || line[7] == '1') {
+        moveStep = DEPART_CROSS;
+      }
+    }
+
+    else if (moveStep == DEPART_CROSS) {
+      leftSpeed = baseSpeed;
+      rightSpeed = baseSpeed;
+      digitalWrite(LEFT_DIR_PIN, FORWARD);
+      digitalWrite(RIGHT_DIR_PIN, FORWARD);
+      if (line[3] == '1' && line[4] == '1') {
+        moveStep = FIND_CENTER;
+      }
+    }
+
+    else if (moveStep == FIND_CENTER) {
+      leftSpeed = baseSpeed;
+      rightSpeed = baseSpeed;
+      digitalWrite(LEFT_DIR_PIN, BACKWARD);
+      digitalWrite(RIGHT_DIR_PIN, FORWARD);
+      if (line[3] == '0' && line[4] == '0' && line[5] == '0' && line[6] == '0') {
+        moveStep = INITIAL;
+        state = STOP;
+        reportState();
+      }
+    }
+  }
+  //----------------------------
 }
 
 //---------------------------------------------------------------
