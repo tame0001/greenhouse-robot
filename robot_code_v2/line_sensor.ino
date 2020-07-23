@@ -1,9 +1,11 @@
 void readIRData() {
 
+  char tempArr[8];
+
 #ifdef LINEDEBUG_ON
   Serial.println("Reading Line Sensor");
 #endif
-  
+
   linePos = 0;
   Wire.requestFrom(LINE_ADDR, 16);
   while (Wire.available())
@@ -55,9 +57,12 @@ void readIRData() {
   Serial.println("-------------------------------------");
 #endif
   result.toCharArray(line, 9);
+  
+  for (int i = 0; i < 8; i++) {
+    tempArr[i] = line[7-i];
+  }
 
-  linePtr = result.c_str();
-
+  linePtr = tempArr;
   Wire.beginTransmission(LEDARRAY_ADDR);
   Wire.write(0x01);
   Wire.write(strtol(linePtr, NULL, 2));
