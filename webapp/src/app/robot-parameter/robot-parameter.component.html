@@ -48,6 +48,21 @@
 
     <app-line-sensor [robotID] = robotID></app-line-sensor>
 
+    <div class="row">
+        <div class="col-sm-7">Line Sensor LED</div>
+        <div class="col-sm-5">
+            <mat-slide-toggle [(ngModel)]="isLineLED" (ngModelChange)="isLineLEDChange()"></mat-slide-toggle>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-7">Beacon</div>
+        <div class="col-sm-5">
+            <mat-slide-toggle [(ngModel)]="isBeacon" (ngModelChange)="isBeaconChange()"></mat-slide-toggle>
+        </div>
+    </div>
+
+    
+
     <!-- <div class="row m-1" *ngIf="showConfigureBool">
         <div class="row">
             <div class="col">Driving</div> 

@@ -24,6 +24,8 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   drivingTime: string;
   turningTime: string;
   conmmandTopic: string;
+  isBeacon: boolean;
+  isLineLED: boolean;
 
   showConfigureBool: boolean = false;
   currentStatus: string = 'OFFLINE';
@@ -90,10 +92,6 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
     this.unsafePublish(this.conmmandTopic, 's');
   }
 
-  sendPing() {
-    this.unsafePublish(this.conmmandTopic, 'p');
-  }
-
   sendLeft() {
     this.unsafePublish(this.conmmandTopic, 'q');
   }
@@ -143,6 +141,24 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   ngOnInit() {
     this.conmmandTopic = 'irobot/command/'.concat(this.robotID);
     // this.getParameters();
+  }
+
+  isLineLEDChange() {
+    if (this.isLineLED == true) {
+      this.unsafePublish(this.conmmandTopic, 'p');
+    }
+    else {
+      this.unsafePublish(this.conmmandTopic, 'o');
+    }
+  }
+
+  isBeaconChange() {
+    if (this.isBeacon == true) {
+      this.unsafePublish(this.conmmandTopic, 'i');
+    }
+    else {
+      this.unsafePublish(this.conmmandTopic, 'u');
+    }
   }
 
   public unsafePublish(topic: string, message: string): void {
