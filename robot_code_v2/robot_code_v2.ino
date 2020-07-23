@@ -12,7 +12,7 @@
 //Firmware version
 #define MAJOR_VERSION 2
 #define MINOR_VERSION 3
-#define BUILD_VERSION 5
+#define BUILD_VERSION 6
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters

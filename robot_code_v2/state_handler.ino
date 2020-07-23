@@ -39,7 +39,12 @@ void stateHandler() {
   else if (state == LEFT) {
 
     if (moveStep == INITIAL) {
-      moveStep = DEPART_CENTER;
+      speedAdjust();
+      digitalWrite(LEFT_DIR_PIN, BACKWARD);
+      digitalWrite(RIGHT_DIR_PIN, BACKWARD);
+      if (line[0] == '0' && line[7] == '0') {
+        moveStep = DEPART_CENTER;
+      }
     }
 
     else if (moveStep == DEPART_CENTER) {
