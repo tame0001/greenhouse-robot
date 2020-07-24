@@ -59,7 +59,7 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
           this.splitedMessage = this.mqttMessage.split(':');
           // console.log(this.splitedMessage);
           if (this.splitedMessage[0] == this.robotID) {
-            switch (this.splitedMessage[2]) {
+            switch (this.splitedMessage[1]) {
               case '0':
                 this.currentStatus = 'STOPPING';
                 break;
