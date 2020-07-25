@@ -64,6 +64,7 @@ void stateHandler() {
       digitalWrite(RIGHT_DIR_PIN, FORWARD);
       if (line[3] == '1' && line[4] == '1') {
         moveStep = FIND_CENTER;
+        time_limit = millis();
       }
     }
 
@@ -72,7 +73,7 @@ void stateHandler() {
       rightSpeed = baseSpeed;
       digitalWrite(LEFT_DIR_PIN, BACKWARD);
       digitalWrite(RIGHT_DIR_PIN, FORWARD);
-      if (line[4] == '0' && line[5] == '0' && line[6] == '0') {
+      if (line[4] == '0' && line[5] == '0' && line[6] == '0' or millis() - time_limit > 1500) {
         moveStep = INITIAL;
         state = STOP;
         reportState();
@@ -81,7 +82,7 @@ void stateHandler() {
   }
 
   //----------------------------
-  
+
   else if (state == RIGHT) {
 
     if (moveStep == INITIAL) {
@@ -110,6 +111,7 @@ void stateHandler() {
       digitalWrite(RIGHT_DIR_PIN, FORWARD);
       if (line[3] == '1' && line[4] == '1') {
         moveStep = FIND_CENTER;
+        time_limit = millis();
       }
     }
 
@@ -118,16 +120,16 @@ void stateHandler() {
       rightSpeed = baseSpeed;
       digitalWrite(LEFT_DIR_PIN, FORWARD);
       digitalWrite(RIGHT_DIR_PIN, BACKWARD);
-      if (line[1] == '0' && line[2] == '0' && line[3] == '0') {
+      if (line[1] == '0' && line[2] == '0' && line[3] == '0' or millis() - time_limit > 1500) {
         moveStep = INITIAL;
         state = STOP;
         reportState();
       }
     }
   }
-  
+
   //----------------------------
-  
+
 }
 
 //---------------------------------------------------------------

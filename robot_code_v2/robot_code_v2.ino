@@ -12,7 +12,7 @@
 //Firmware version
 #define MAJOR_VERSION 2
 #define MINOR_VERSION 3
-#define BUILD_VERSION 8
+#define BUILD_VERSION 9
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters
@@ -41,6 +41,7 @@ State state = NONE;
 enum Message {READY, I2C_FAULT};
 Message msg = READY;
 enum Feedback {ALL, SPEED, ONB_TEMP, BATT, OFFB_TEMP, LIGHT};
+long time_limit;
 
 //---------------------------------------------------------------
 //Timers
