@@ -72,7 +72,7 @@ void stateHandler() {
       rightSpeed = baseSpeed;
       digitalWrite(LEFT_DIR_PIN, BACKWARD);
       digitalWrite(RIGHT_DIR_PIN, FORWARD);
-      if (line[3] == '0' && line[4] == '0' && line[5] == '0' && line[6] == '0') {
+      if (line[4] == '0' && line[5] == '0' && line[6] == '0') {
         moveStep = INITIAL;
         state = STOP;
         reportState();
@@ -118,7 +118,7 @@ void stateHandler() {
       rightSpeed = baseSpeed;
       digitalWrite(LEFT_DIR_PIN, FORWARD);
       digitalWrite(RIGHT_DIR_PIN, BACKWARD);
-      if (line[1] == '0' && line[2] == '0' && line[3] == '0' && line[4] == '0') {
+      if (line[1] == '0' && line[2] == '0' && line[3] == '0') {
         moveStep = INITIAL;
         state = STOP;
         reportState();

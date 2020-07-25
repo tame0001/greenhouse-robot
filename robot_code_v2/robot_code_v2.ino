@@ -12,7 +12,7 @@
 //Firmware version
 #define MAJOR_VERSION 2
 #define MINOR_VERSION 3
-#define BUILD_VERSION 7
+#define BUILD_VERSION 8
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters
@@ -109,7 +109,7 @@ int16_t battLevel;
 //Movement parameters
 
 const int8_t baseSpeed = 70;
-const int8_t KP = 5;
+const int8_t KP = 10;
 
 enum MoveStep {INITIAL, DEPART_CROSS, FIND_CROSS, DEPART_CENTER, FIND_CENTER};
 MoveStep moveStep = INITIAL;
@@ -169,10 +169,10 @@ void setup() {
   timerAlarmWrite(timer0, 1000000, true);
   timerAlarmEnable(timer0);
 
-  //timer1 setup 20 milliseconds
+  //timer1 setup 10 milliseconds
   timer1 = timerBegin(1, 80, true);
   timerAttachInterrupt(timer1, &onTimer1, true);
-  timerAlarmWrite(timer1, 20000, true);
+  timerAlarmWrite(timer1, 10000, true);
   timerAlarmEnable(timer1);
 #endif
 }
