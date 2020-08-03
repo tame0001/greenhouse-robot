@@ -106,7 +106,6 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
 
   getParameters() {
     this.http.get<any>(this.backendURL.concat('/parameter/').concat(this.robotID)).subscribe(data => {
-      // console.log(data.robot_id);
       this.drivingTime = data.driving_time;
       this.turningTime = data.turning_time;
     });
@@ -121,8 +120,6 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   }
 
   updateParameters() {
-    // console.log(this.drivingTime);
-    // console.log(this.turningTime);
     this.http.post(this.backendURL.concat('/parameter/').concat(this.robotID), 
       {
         "driving_time": this.drivingTime,
@@ -145,19 +142,19 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
 
   isLineLEDChange() {
     if (this.isLineLED == true) {
-      this.unsafePublish(this.conmmandTopic, 'p');
+      this.unsafePublish(this.conmmandTopic, 'u');
     }
     else {
-      this.unsafePublish(this.conmmandTopic, 'o');
+      this.unsafePublish(this.conmmandTopic, 'j');
     }
   }
 
   isBeaconChange() {
     if (this.isBeacon == true) {
-      this.unsafePublish(this.conmmandTopic, 'i');
+      this.unsafePublish(this.conmmandTopic, 'u');
     }
     else {
-      this.unsafePublish(this.conmmandTopic, 'u');
+      this.unsafePublish(this.conmmandTopic, 'j');
     }
   }
 
