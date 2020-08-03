@@ -54,6 +54,14 @@ void commandTopicCallBack(const String &inPayload) {
     isBeaconOn = false;
   }
 
+  else if (inPayload == "i") {
+    isLineLED = true;
+  }
+
+  else if (inPayload == "k") {
+    isLineLED = false;
+  }
+
   reportState();
 }
 

@@ -57,16 +57,29 @@ void readIRData() {
   Serial.println("-------------------------------------");
 #endif
   result.toCharArray(line, 9);
-  
-  for (int i = 0; i < 8; i++) {
-    tempArr[i] = line[7-i];
-  }
 
-  linePtr = tempArr;
-  Wire.beginTransmission(LEDARRAY_ADDR);
-  Wire.write(0x01);
-  Wire.write(strtol(linePtr, NULL, 2));
-  Wire.endTransmission(true);
+  if (isLineLED) {
+
+    for (int i = 0; i < 8; i++) {
+      tempArr[i] = line[7 - i];
+    }
+
+    linePtr = tempArr;
+    Wire.beginTransmission(LEDARRAY_ADDR);
+    Wire.write(0x01);
+    Wire.write(strtol(linePtr, NULL, 2));
+    Wire.endTransmission(true);
+    
+  }
+  
+  else {
+    
+    Wire.beginTransmission(LEDARRAY_ADDR);
+    Wire.write(0x01);
+    Wire.write(0xFF);
+    Wire.endTransmission(true);
+    
+  }
 
 }
 
@@ -98,6 +111,7 @@ int analyzeIRData() {
 //---------------------------------------------------------------
 
 void initLedArray() {
+
   Wire.beginTransmission(LEDARRAY_ADDR);
   Wire.write(0x03);
   Wire.write(0x00);

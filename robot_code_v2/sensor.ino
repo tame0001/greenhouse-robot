@@ -149,7 +149,7 @@ void beaconHandler() {
 
   char temp;
 
-  if (isBeaconOn == false) {
+  if (!isBeaconOn) {
     blueLedOff();
     greenLedOff();
   }

@@ -12,7 +12,7 @@
 //Firmware version
 #define MAJOR_VERSION 2
 #define MINOR_VERSION 4
-#define BUILD_VERSION 1
+#define BUILD_VERSION 2
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters
@@ -93,6 +93,7 @@ String result;
 
 #define LEDARRAY_ADDR 0x23
 const char* linePtr;
+bool isLineLED = true;
 
 //---------------------------------------------------------------
 //On-board Temperature Sensor
