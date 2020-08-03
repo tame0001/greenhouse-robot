@@ -12,7 +12,7 @@
 //Firmware version
 #define MAJOR_VERSION 2
 #define MINOR_VERSION 4
-#define BUILD_VERSION 0
+#define BUILD_VERSION 1
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters
@@ -42,7 +42,6 @@ enum Message {READY, I2C_FAULT};
 Message msg = READY;
 enum Feedback {ALL, SPEED, ONB_TEMP, BATT, OFFB_TEMP, LIGHT};
 long time_limit;
-bool isBeaconOn;
 
 //---------------------------------------------------------------
 //Timers
@@ -134,7 +133,9 @@ enum Direction {BACKWARD, FORWARD};
 
 //---------------------------------------------------------------
 //IO Extender
+
 #define MOTORIO_ADDR 0x21
+bool isBeaconOn = false;
 
 //---------------------------------------------------------------
 
@@ -150,8 +151,6 @@ void setup() {
   blueLedOff();
   greenLedOff();
   checki2c();
-
-  isBeaconOn = false;
 
 #ifdef MQTT_ON
   mqttClient = new EspMQTTClient(
