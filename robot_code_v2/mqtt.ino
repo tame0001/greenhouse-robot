@@ -47,7 +47,11 @@ void commandTopicCallBack(const String &inPayload) {
   }
 
   else if (inPayload == "u") {
-    //      getParameters();
+    isBeaconOn = true;
+  }
+
+  else if (inPayload == "j") {
+    isBeaconOn = false;
   }
 
   reportState();

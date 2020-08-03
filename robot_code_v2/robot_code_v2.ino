@@ -151,7 +151,7 @@ void setup() {
   greenLedOff();
   checki2c();
 
-  isBeaconOn = true;
+  isBeaconOn = false;
 
 #ifdef MQTT_ON
   mqttClient = new EspMQTTClient(
