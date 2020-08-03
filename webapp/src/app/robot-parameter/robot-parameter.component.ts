@@ -24,8 +24,8 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
   drivingTime: string;
   turningTime: string;
   conmmandTopic: string;
-  isBeacon: boolean;
-  isLineLED: boolean;
+  isBeacon: boolean = false;
+  isLineLED: boolean = true;
 
   showConfigureBool: boolean = false;
   currentStatus: string = 'OFFLINE';
@@ -142,10 +142,10 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
 
   isLineLEDChange() {
     if (this.isLineLED == true) {
-      this.unsafePublish(this.conmmandTopic, 'u');
+      this.unsafePublish(this.conmmandTopic, 'i');
     }
     else {
-      this.unsafePublish(this.conmmandTopic, 'j');
+      this.unsafePublish(this.conmmandTopic, 'k');
     }
   }
 
