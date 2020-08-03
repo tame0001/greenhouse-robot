@@ -144,3 +144,36 @@ void checki2c() {
 }
 
 //---------------------------------------------------------------
+
+void beaconHandler() {
+
+  char temp;
+
+  if (isBeaconOn == false) {
+    blueLedOff();
+    greenLedOff();
+  }
+
+  else {
+
+    Wire.beginTransmission(MOTORIO_ADDR);
+    Wire.write(0x01);
+    Wire.endTransmission(false);
+    Wire.requestFrom(MOTORIO_ADDR, 1, true);
+    temp = Wire.read();
+
+    if ((temp & 0x18) == 0) {
+      temp = temp ^ 0x10;
+    }
+
+    temp = temp ^ 0x18;
+
+    Wire.beginTransmission(MOTORIO_ADDR);
+    Wire.write(0x01);
+    Wire.write(temp);
+    Wire.endTransmission(true);
+  }
+
+}
+
+//---------------------------------------------------------------

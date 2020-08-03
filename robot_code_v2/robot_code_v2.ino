@@ -11,8 +11,8 @@
 //---------------------------------------------------------------
 //Firmware version
 #define MAJOR_VERSION 2
-#define MINOR_VERSION 3
-#define BUILD_VERSION 10
+#define MINOR_VERSION 4
+#define BUILD_VERSION 0
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters
@@ -42,6 +42,7 @@ enum Message {READY, I2C_FAULT};
 Message msg = READY;
 enum Feedback {ALL, SPEED, ONB_TEMP, BATT, OFFB_TEMP, LIGHT};
 long time_limit;
+bool isBeaconOn;
 
 //---------------------------------------------------------------
 //Timers
@@ -149,6 +150,8 @@ void setup() {
   blueLedOff();
   greenLedOff();
   checki2c();
+
+  isBeaconOn = true;
 
 #ifdef MQTT_ON
   mqttClient = new EspMQTTClient(

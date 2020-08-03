@@ -4,6 +4,7 @@ void timer0Service() {
   flagTimer0 = false;
   readBattLevel();
   readOnboardTemp();
+  beaconHandler();
 
 #ifdef MQTT_ON
   reportParameters(leftSpeed, rightSpeed);
