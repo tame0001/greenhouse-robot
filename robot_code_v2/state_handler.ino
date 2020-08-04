@@ -3,6 +3,20 @@ void stateHandler() {
   if (state == STOP) {
     leftSpeed = 0;
     rightSpeed = 0;
+
+    if (!islastTurn) {
+
+      islastTurn = true;
+
+      if (uTurnDir == LEFTWARD) {
+        state = LEFT;
+      }
+
+      else if (uTurnDir == RIGHTWARD) {
+        state = RIGHT;
+      }
+
+    }
   }
   //----------------------------
   else if (state == RUN) {
@@ -67,7 +81,7 @@ void stateHandler() {
       digitalWrite(RIGHT_DIR_PIN, FORWARD);
       if (line[0] == '1' || line[7] == '1') {
         moveStep = DEPART_CROSS;
-        time_limit = millis();
+        timeLimit = millis();
       }
     }
 
@@ -77,9 +91,9 @@ void stateHandler() {
       digitalWrite(LEFT_DIR_PIN, FORWARD);
       digitalWrite(RIGHT_DIR_PIN, FORWARD);
       if (line[3] == '1' && line[4] == '1' or
-          millis() - time_limit > 700) {
+          millis() - timeLimit > 700) {
         moveStep = FIND_CENTER;
-        time_limit = millis();
+        timeLimit = millis();
       }
     }
 
@@ -89,7 +103,7 @@ void stateHandler() {
       digitalWrite(LEFT_DIR_PIN, BACKWARD);
       digitalWrite(RIGHT_DIR_PIN, FORWARD);
       if (line[4] == '0' && line[5] == '0' && line[6] == '0' or
-          millis() - time_limit > 1500) {
+          millis() - timeLimit > 1500) {
         moveStep = INITIAL;
         state = STOP;
         reportState();
@@ -117,7 +131,7 @@ void stateHandler() {
       digitalWrite(RIGHT_DIR_PIN, BACKWARD);
       if (line[0] == '1' || line[7] == '1') {
         moveStep = DEPART_CROSS;
-        time_limit = millis();
+        timeLimit = millis();
       }
     }
 
@@ -127,9 +141,9 @@ void stateHandler() {
       digitalWrite(LEFT_DIR_PIN, FORWARD);
       digitalWrite(RIGHT_DIR_PIN, FORWARD);
       if (line[3] == '1' && line[4] == '1' or
-          millis() - time_limit > 700) {
+          millis() - timeLimit > 700) {
         moveStep = FIND_CENTER;
-        time_limit = millis();
+        timeLimit = millis();
       }
     }
 
@@ -139,11 +153,26 @@ void stateHandler() {
       digitalWrite(LEFT_DIR_PIN, FORWARD);
       digitalWrite(RIGHT_DIR_PIN, BACKWARD);
       if (line[1] == '0' && line[2] == '0' && line[3] == '0' or
-          millis() - time_limit > 1500) {
+          millis() - timeLimit > 1500) {
         moveStep = INITIAL;
         state = STOP;
         reportState();
       }
+    }
+  }
+
+  //----------------------------
+
+  else if (state == UTURN) {
+
+    islastTurn = false;
+
+    if (uTurnDir == LEFTWARD) {
+      state = LEFT;
+    }
+
+    else if (uTurnDir == RIGHTWARD) {
+      state = RIGHT;
     }
   }
 

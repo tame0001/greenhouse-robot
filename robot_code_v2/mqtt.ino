@@ -46,6 +46,10 @@ void commandTopicCallBack(const String &inPayload) {
     state = RIGHT;
   }
 
+  else if (inPayload == "t") {
+    state = UTURN;
+  }
+
   else if (inPayload == "u") {
     isBeaconOn = true;
   }

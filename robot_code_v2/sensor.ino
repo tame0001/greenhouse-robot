@@ -36,6 +36,19 @@ void initEeprom() {
 
   robotID = uint8_t(Wire.read());
   sprintf(robotName, "i-robot%d", robotID);
+
+  Wire.beginTransmission(EEPROM_ADDR);
+  Wire.write(UTURNDIR_ADDR);
+  Wire.endTransmission(false);
+  Wire.requestFrom(EEPROM_ADDR, 1, true);
+
+  if (Wire.read() == 0) {
+    uTurnDir = LEFTWARD;
+  }
+  else if (Wire.read() == 1){
+    uTurnDir = RIGHTWARD;
+  }
+  
 }
 
 //---------------------------------------------------------------

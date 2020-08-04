@@ -11,8 +11,8 @@
 //---------------------------------------------------------------
 //Firmware version
 #define MAJOR_VERSION 2
-#define MINOR_VERSION 4
-#define BUILD_VERSION 2
+#define MINOR_VERSION 5
+#define BUILD_VERSION 0
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters
@@ -41,7 +41,8 @@ State state = NONE;
 enum Message {READY, I2C_FAULT};
 Message msg = READY;
 enum Feedback {ALL, SPEED, ONB_TEMP, BATT, OFFB_TEMP, LIGHT};
-long time_limit;
+long timeLimit;
+bool islastTurn = true;
 
 //---------------------------------------------------------------
 //Timers
@@ -77,6 +78,7 @@ void IRAM_ATTR onTimer1() {
 #define EEPROM_ADDR 0x50
 #define EEPROM_WC 23
 #define ROBOTID_ADDR 0x00
+#define UTURNDIR_ADDR 0x01
 
 //---------------------------------------------------------------
 //Line follower parameters
@@ -115,6 +117,9 @@ const int8_t KP = 10;
 
 enum MoveStep {INITIAL, DEPART_CROSS, FIND_CROSS, DEPART_CENTER, FIND_CENTER};
 MoveStep moveStep = INITIAL;
+
+enum UturnDir {LEFTWARD, RIGHTWARD};
+UturnDir uTurnDir = LEFTWARD;
 
 //---------------------------------------------------------------
 //Motor pins
