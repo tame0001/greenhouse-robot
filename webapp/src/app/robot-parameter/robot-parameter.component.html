@@ -27,7 +27,7 @@
 
     <div class="row m-1">
         <div class="col-sm-6">
-            <button type="button" class="btn btn-success" (click)="sendRun()">Run</button>
+            <button type="button" class="btn btn-success" (click)="sendForward()">Forward</button>
         </div>
         <div class="col-sm-6">
             <button type="button" class="btn btn-danger" (click)="sendStop()">Stop</button> 
@@ -35,13 +35,13 @@
     </div>
 
     <div class="row text-center">
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendLeft()">Left</button>
         </div>
         <div class="col-sm-4">
-            <button type="button" class="btn btn-outline-primary btn-sm" (click)="sendForward()">Forward</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendUturn()">Turn</button>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendRight()">Right</button>
         </div>        
     </div>

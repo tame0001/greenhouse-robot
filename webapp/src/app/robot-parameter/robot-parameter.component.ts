@@ -84,8 +84,8 @@ export class RobotParameterComponent implements OnInit, OnDestroy{
         });
   }
 
-  sendRun() {
-    this.unsafePublish(this.conmmandTopic, 'w');
+  sendUturn() {
+    this.unsafePublish(this.conmmandTopic, 't');
   }
 
   sendStop() {
