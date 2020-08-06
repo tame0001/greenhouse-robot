@@ -20,6 +20,12 @@ void readBattLevel() {
   Serial.print("Battery level = ");
   Serial.println((battLevel + 192) / 1280.0 * 5.5);
 #endif
+if (battLevel < LOWBATT_THES){
+  msg = LOW_BATT;
+  isBeaconOn = true;
+  isLineLED = false;
+  motorSleepOn();
+}
 }
 
 //---------------------------------------------------------------

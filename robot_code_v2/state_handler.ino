@@ -3,20 +3,21 @@ void stateHandler() {
   if (state == STOP) {
     leftSpeed = 0;
     rightSpeed = 0;
+    //
+    //    if (!islastTurn) {
+    //
+    //      islastTurn = true;
+    //
+    //      if (uTurnDir == LEFTWARD) {
+    //        state = LEFT;
+    //      }
+    //
+    //      else if (uTurnDir == RIGHTWARD) {
+    //        state = RIGHT;
+    //      }
+    //
+    //    }
 
-    if (!islastTurn) {
-
-      islastTurn = true;
-
-      if (uTurnDir == LEFTWARD) {
-        state = LEFT;
-      }
-
-      else if (uTurnDir == RIGHTWARD) {
-        state = RIGHT;
-      }
-
-    }
   }
   //----------------------------
   else if (state == RUN) {
@@ -105,8 +106,15 @@ void stateHandler() {
       if (line[4] == '0' && line[5] == '0' && line[6] == '0' or
           millis() - timeLimit > 1500) {
         moveStep = INITIAL;
-        state = STOP;
-        reportState();
+
+        if (islastTurn) {
+          state = STOP;
+          reportState();
+        }
+        else {
+          islastTurn = true;
+        }
+
       }
     }
   }
@@ -155,8 +163,15 @@ void stateHandler() {
       if (line[1] == '0' && line[2] == '0' && line[3] == '0' or
           millis() - timeLimit > 1500) {
         moveStep = INITIAL;
-        state = STOP;
-        reportState();
+
+        if (islastTurn) {
+          state = STOP;
+          reportState();
+        }
+        else {
+          islastTurn = true;
+        }
+
       }
     }
   }

@@ -12,7 +12,7 @@
 //Firmware version
 #define MAJOR_VERSION 2
 #define MINOR_VERSION 5
-#define BUILD_VERSION 0
+#define BUILD_VERSION 1
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters
@@ -38,7 +38,7 @@ int8_t feedbackErr;
 char payload[50], commandTopic[30];
 enum State {STOP, RUN, MOVE, LEFT, RIGHT, UTURN, NONE};
 State state = NONE;
-enum Message {READY, I2C_FAULT};
+enum Message {READY, I2C_FAULT, LOW_BATT};
 Message msg = READY;
 enum Feedback {ALL, SPEED, ONB_TEMP, BATT, OFFB_TEMP, LIGHT};
 long timeLimit;
@@ -108,6 +108,7 @@ int16_t temperature;
 
 #define BATT_PIN 34
 int16_t battLevel;
+#define LOWBATT_THES 2000
 
 //---------------------------------------------------------------
 //Movement parameters
