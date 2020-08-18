@@ -32,6 +32,8 @@ if (battLevel < LOWBATT_THES){
 
 void initEeprom() {
 
+  uint8_t dir;
+
   pinMode(EEPROM_WC, OUTPUT);
   eepromWriteProtectOn();
 
@@ -48,10 +50,12 @@ void initEeprom() {
   Wire.endTransmission(false);
   Wire.requestFrom(EEPROM_ADDR, 1, true);
 
-  if (Wire.read() == 0) {
+  dir = uint8_t(Wire.read());
+  
+  if (dir == 0) {
     uTurnDir = LEFTWARD;
   }
-  else if (Wire.read() == 1){
+  else if (dir == 1){
     uTurnDir = RIGHTWARD;
   }
   

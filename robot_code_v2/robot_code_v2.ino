@@ -12,15 +12,15 @@
 //Firmware version
 #define MAJOR_VERSION 2
 #define MINOR_VERSION 5
-#define BUILD_VERSION 1
+#define BUILD_VERSION 2
 
 //---------------------------------------------------------------
 //WiFi and MQTT parameters
 
 #define wifiSSID "i-robot"
 #define wifiPassword "1n1t1al0"
-//#define brokerIP "128.46.109.133"
-#define brokerIP "192.168.1.191"
+#define brokerIP "128.46.109.133"
+//#define brokerIP "192.168.1.191"
 #define brokerPort 1883
 
 #ifdef MQTT_ON
