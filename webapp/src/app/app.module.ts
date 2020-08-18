@@ -14,8 +14,8 @@ import { RobotParameterComponent } from './robot-parameter/robot-parameter.compo
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export const MQTT_SERVICE_OPTIONS: IMqttServiceOptions = {
-  // hostname: '128.46.109.133',
-  hostname: '192.168.1.191',
+  hostname: '128.46.109.133',
+  // hostname: '192.168.1.191',
   port: 9001,
   path: '/'
 };
