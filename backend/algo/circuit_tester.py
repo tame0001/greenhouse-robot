@@ -8,8 +8,8 @@ class ControlCenter:
         self.mqtt.on_connect = self.on_connect
         self.mqtt.on_message = self.on_message
         self.mqtt.connect("192.168.1.191", 1883, 60)
-        self.robot1 = PotCarrier(1)
-        self.robot2 = PotCarrier(2)
+        # self.robot1 = PotCarrier(1)
+        # self.robot2 = PotCarrier(2)
         self.robot7 = PotCarrier(7)
 
 
@@ -34,7 +34,7 @@ class PotCarrier:
     def __init__(self, robot_id):
         self.id = robot_id
         self.count_cmd = 0
-        self.commands = ['r', 'r', 'e']
+        self.commands = ['r', 'r', 'q']
         self.cmd_pointer = 0
         self.cmd_topic = f'irobot/command/{self.id}'
         print(f'Create robot id {self.id}. Command will be sent to topic {self.cmd_topic}')
