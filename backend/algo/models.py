@@ -9,11 +9,12 @@ class Position(db):
     robot = Column(Integer)
     x = Column(Integer)
     y = Column(Integer)
+    direction = Column(Integer)
     timestamp = Column(DateTime)
 
     def __repr__(self):
-        return 'Robot ID {} was in ({}, {}) at {}'.format(
-            self.robot, self.x, self.y, self.timestamp
+        return 'Robot ID {} was in ({}, {}) heading {} at {}'.format(
+            self.robot, self.x, self.y, self.direction, self.timestamp
         )
 
     def convert_json(self):
@@ -21,5 +22,6 @@ class Position(db):
             'id': self.robot,
             'x': self.x,
             'y':self.y,
+            'direction': self.direction,
             'timestamp': self.timestamp 
         }
