@@ -6,7 +6,7 @@ import datetime
 import random
 
 number_rows = 5
-number_cols = 6
+number_cols = 7
 number_robots = 10
 
 # Scheme: "postgres+psycopg2://<USERNAME>:<PASSWORD>@<IP_ADDRESS>:<PORT>/<DATABASE_NAME>"
@@ -17,13 +17,25 @@ Session = sessionmaker(bind=engine)
 
 session = Session()
 
+occupied_position = []
 
 for robot in range(1, number_robots+1):
 
+    x_pos = random.randint(1, number_rows-2)
+    y_pos = random.randint(1, number_cols-2)
+    pos = (x_pos, y_pos)
+
+    while pos in occupied_position:
+        x_pos = random.randint(1, number_rows-2)
+        y_pos = random.randint(1, number_cols-2)
+        pos = (x_pos, y_pos)
+
+    occupied_position.append(pos)
+
     postion = Position(
         robot = robot,
-        x = random.randint(1, number_rows-2),
-        y = random.randint(1, number_cols-2),
+        x = x_pos,
+        y = y_pos,
         direction = random.randint(1, 4),
         timestamp = datetime.datetime.now()
     )
@@ -31,3 +43,4 @@ for robot in range(1, number_robots+1):
 
 session.commit()
 session.close()
+
