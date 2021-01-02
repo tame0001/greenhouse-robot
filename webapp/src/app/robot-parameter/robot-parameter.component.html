@@ -1,33 +1,69 @@
 <div class="container" style="text-align:center">
+
     <div class="row">
-        <div class="col">ID = {{ robotID }}</div>
-        <div class="col">{{ currentStatus }}</div>
+        <div class="col">Robot ID = {{ robotID }}</div>
     </div>
+
+    <div class="row">
+        <div class="col-sm-3">Status</div>
+        <div class="col-sm-9">{{ currentStatus }}</div>
+    </div>
+
     <div class="row">
         <div class="col border"> {{ letfSpeed }}%</div>
         <div class="col">Speed</div>
-        <div class="col border"> {{rightSpeed }}%</div>
+        <div class="col border"> {{ rightSpeed }}%</div>
     </div>
+
+    <div class="row">
+        <div class="col-sm-6">Temperature</div>
+        <div class="col-sm-6">{{ temperatureOnBoard }} Celcius</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">Battery Level</div>
+        <div class="col-sm-6">{{ batteryLevel }} Volts</div>
+    </div>
+
     <div class="row m-1">
         <div class="col-sm-6">
-            <button type="button" class="btn btn-success" (click)="sendRun()">Run</button>
+            <button type="button" class="btn btn-success" (click)="sendForward()">Forward</button>
         </div>
         <div class="col-sm-6">
             <button type="button" class="btn btn-danger" (click)="sendStop()">Stop</button> 
         </div>      
     </div>
-    <div class="row m-1">
+
+    <div class="row text-center">
         <div class="col-sm-4">
             <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendLeft()">Left</button>
         </div>
         <div class="col-sm-4">
-            <button type="button" class="btn btn-outline-primary btn-sm" (click)="sendTurn()">Turn</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendUturn()">Turn</button>
         </div>
         <div class="col-sm-4">
             <button type="button" class="btn btn-outline-secondary btn-sm" (click)="sendRight()">Right</button>
         </div>        
     </div>
-    <div class="row m-1">
+
+    <app-line-sensor [robotID] = robotID></app-line-sensor>
+
+    <div class="row">
+        <div class="col-sm-7">Line Sensor LED</div>
+        <div class="col-sm-5">
+            <mat-slide-toggle [(ngModel)]="isLineLED" (ngModelChange)="isLineLEDChange()"></mat-slide-toggle>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-7">Beacon</div>
+        <div class="col-sm-5">
+            <mat-slide-toggle [(ngModel)]="isBeacon" (ngModelChange)="isBeaconChange()"></mat-slide-toggle>
+        </div>
+    </div>
+
+    
+
+    <!-- <div class="row m-1" *ngIf="showConfigureBool">
         <div class="row">
             <div class="col">Driving</div> 
             <div class="col">
@@ -40,7 +76,7 @@
             </div>
         </div>
     </div>
-    <div class="row m-1">
+    <div class="row m-1" *ngIf="showConfigureBool">
         <div class="row">
             <div class="col">Turning</div> 
             <div class="col">
@@ -53,7 +89,7 @@
             </div>
         </div>
     </div>
-    <div class="row m-1">
+    <div class="row m-1" *ngIf="showConfigureBool">
         <div class="col">
             <button type="button" class="btn btn-warning btn-sm" (click)="updateParameters()">Update</button>
         </div>
@@ -61,4 +97,15 @@
             <button type="button" class="btn btn-info btn-sm" (click)="getParameters()">Reset</button>
         </div>
     </div>
+    <div class="row m-1" *ngIf="!showConfigureBool">
+        <div class="col">
+            <button type="button" class="btn btn-warning btn-sm" (click)="showConfigure()">Show Configure</button>
+        </div>
+    </div>
+    <div class="row m-1" *ngIf="showConfigureBool">
+        <div class="col">
+            <button type="button" class="btn btn-warning btn-sm" (click)="hideConfigure()">Hide Configure</button>
+        </div>
+    </div> -->
+    
 </div>

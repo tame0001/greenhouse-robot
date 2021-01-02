@@ -1,4 +1,7 @@
 .vscode
 backend/venv/
+*.bin
 backend/__pycache__/
 *.pyc
+backend/parameters.xml
+
