@@ -1,3 +1,4 @@
 .vscode
 backend/venv/
 *.bin
+backend/__pycache__/
